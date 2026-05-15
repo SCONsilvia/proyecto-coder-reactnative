@@ -52,6 +52,6 @@ export const logoutUser = async () => {
         
         await signOut(auth);
     } catch (error) {
-        throw error.message;
+        throw error.code;
     }
 };

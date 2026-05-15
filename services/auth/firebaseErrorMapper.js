@@ -19,6 +19,7 @@ export const mapFirebaseErrorToField = (
         case "auth/invalid-credential":
         case "auth/too-many-requests":
             setFieldError("general");
+            break;
 
         default:
             setFieldError("general");

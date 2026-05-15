@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunks";
+import MainLayout from "../layouts/MainLayout";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -9,7 +10,7 @@ import * as Yup from "yup";
 import { getFirebaseErrorMessage } from "../services/auth/firebaseErrors";
 import { mapFirebaseErrorToField } from "../services/auth/firebaseErrorMapper";
 
-const registerValidationSchema = Yup.object().shape({
+const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
         .email("Email inválido")
         .required("El email es obligatorio"),
@@ -21,9 +22,6 @@ const registerValidationSchema = Yup.object().shape({
 
 const LoginScreen = ({navigation}) => {
     const dispatch = useDispatch();
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     
     const { loading, error } = useSelector(
         state => state.user
@@ -54,65 +52,79 @@ const LoginScreen = ({navigation}) => {
     };
 
     return (
-        <Formik
-            //Estado inicial del formulario.
-            initialValues = {{ email: "", password: "" }}
-            validationSchema = {registerValidationSchema}
-            onSubmit = {handleLogin}
-        >
-            {({
-                handleChange,
-                handleSubmit,
-                values,
-                //Errores que devuelve Yup.
-                errors,
-                // touched Solo muestra error si el usuario tocó el input.
-                touched,
-            }) => (
-                <View>
+        <MainLayout>
+            <Formik
+                //Estado inicial del formulario.
+                initialValues = {{ email: "", password: "" }}
+                validationSchema = {loginValidationSchema}
+                onSubmit = {handleLogin}
+            >
+                {({
+                    handleChange,
+                    handleSubmit,
+                    handleBlur,
+                    values,
+                    //Errores que devuelve Yup.
+                    errors,
+                    // touched Solo muestra error si el usuario tocó el input.
+                    touched,
+                }) => (
+                    <View>
 
-                    <TextInput
-                        placeholder="Email"
-                        value={values.email}
-                        //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
-                        onChangeText={handleChange("email")}
-                    />
+                        <TextInput
+                            placeholder="Email"
+                            value={values.email}
+                            //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
+                            onChangeText={handleChange("email")}
+                            onBlur={handleBlur("email")}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            textContentType="emailAddress"
+                            autoComplete="email"
+                        />
 
-                    {touched.email && errors.email && (
-                    <Text>{errors.email}</Text>
-                    )}
+                        {touched.email && errors.email && (
+                        <Text>{errors.email}</Text>
+                        )}
 
-                    <TextInput
-                        placeholder="Password"
-                        secureTextEntry
-                        value={values.password}
-                        onChangeText={handleChange("password")}
-                    />
+                        <TextInput
+                            placeholder="Password"
+                            secureTextEntry
+                            value={values.password}
+                            onChangeText={handleChange("password")}
+                            onBlur={handleBlur("password")}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            textContentType="password"
+                            autoComplete="password"
+                        />
 
-                    {touched.password && errors.password && (
-                        <Text>{errors.password}</Text>
-                    )}
+                        {touched.password && errors.password && (
+                            <Text>{errors.password}</Text>
+                        )}
 
-                    {errors.general && (
-                        <Text style={{ color: "red" }}>
-                            {errors.general}
-                        </Text>
-                    )}
+                        {errors.general && (
+                            <Text style={{ color: "red" }}>
+                                {errors.general}
+                            </Text>
+                        )}
 
-                    <Button title={loading  ? "Ingresando..." : "Login"} onPress={handleSubmit} disabled={loading }/>
-                    {/* handleSubmit
-                        Formik:
-                        valida con Yup
-                        si pasa → ejecuta onSubmit*/}
+                        <Button title={loading  ? "Ingresando..." : "Login"} onPress={handleSubmit} disabled={loading }/>
+                        {/* handleSubmit
+                            Formik:
+                            valida con Yup
+                            si pasa → ejecuta onSubmit*/}
 
-                    <Button
-                        title="Crear cuenta"
-                        onPress={() => navigation.navigate("Register")}
-                    />
+                        <Button
+                            title="Crear cuenta"
+                            onPress={() => navigation.replace("Register")}
+                        />
 
-                </View>
-            )}
-        </Formik>
+                    </View>
+                )}
+            </Formik>
+        </MainLayout>
     );
 }
 

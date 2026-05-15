@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { registerUser } from "../features/auth/authThunks";
 import { useDispatch, useSelector } from "react-redux";
+import MainLayout from "../layouts/MainLayout";
 
 //Formik maneja formularios, se encatga de guardar valores, manejar cambios, manejar submit, manejar errores, saber si tocaste un input, evitar useState por campo o sea que reemplaza esto useState onChangeText handleSubmit manual
 import { Formik } from "formik";
@@ -53,127 +54,74 @@ const RegisterScreen = ({ navigation }) => {
     };
 
     return (
-        <Formik
-            //Estado inicial del formulario.
-            initialValues = {{ email: "", password: "" }}
-            validationSchema = {registerValidationSchema}
-            onSubmit = {handleRegister}
-        >
-            {({
-                handleChange,
-                handleSubmit,
-                values,
-                //Errores que devuelve Yup.
-                errors,
-                // touched Solo muestra error si el usuario tocó el input.
-                touched,
-            }) => (
-                <View>
+        <MainLayout>
+            <Formik
+                //Estado inicial del formulario.
+                initialValues = {{ email: "", password: "" }}
+                validationSchema = {registerValidationSchema}
+                onSubmit = {handleRegister}
+            >
+                {({
+                    handleChange,
+                    handleSubmit,
+                    handleBlur,
+                    values,
+                    //Errores que devuelve Yup.
+                    errors,
+                    // touched Solo muestra error si el usuario tocó el input.
+                    touched,
+                }) => (
+                    <View>
 
-                    <TextInput
-                        placeholder="Email"
-                        value={values.email}
-                        //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
-                        onChangeText={handleChange("email")}
-                    />
+                        <TextInput
+                            placeholder="Email"
+                            value={values.email}
+                            //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
+                            onChangeText={handleChange("email")}
+                            onBlur={handleBlur("email")}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            textContentType="emailAddress"
+                            autoComplete="email"
+                        />
 
-                    {touched.email && errors.email && (
-                    <Text>{errors.email}</Text>
-                    )}
+                        {touched.email && errors.email && (
+                        <Text>{errors.email}</Text>
+                        )}
 
-                    <TextInput
-                        placeholder="Password"
-                        secureTextEntry
-                        value={values.password}
-                        onChangeText={handleChange("password")}
-                    />
+                        <TextInput
+                            placeholder="Password"
+                            secureTextEntry
+                            value={values.password}
+                            onChangeText={handleChange("password")}
+                            onBlur={handleBlur("password")}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            textContentType="password"
+                            autoComplete="password"
+                        />
 
-                    {touched.password && errors.password && (
-                        <Text>{errors.password}</Text>
-                    )}
+                        {touched.password && errors.password && (
+                            <Text>{errors.password}</Text>
+                        )}
 
-                    <Button title={loading  ? "Registrando..." : "Register"}  onPress={handleSubmit} disabled={loading } />
-                    {/* handleSubmit
-                        Formik:
-                        valida con Yup
-                        si pasa → ejecuta onSubmit*/}
+                        <Button title={loading  ? "Registrando..." : "Register"}  onPress={handleSubmit} disabled={loading } />
+                        {/* handleSubmit
+                            Formik:
+                            valida con Yup
+                            si pasa → ejecuta onSubmit*/}
 
-                    <Button
-                        title="Already have account?"
-                        onPress={() => navigation.navigate("Login")}
-                    />
+                        <Button
+                            title="Already have account?"
+                            onPress={() => navigation.replace("Login")}
+                        />
 
-                </View>
-            )}
-        </Formik>
+                    </View>
+                )}
+            </Formik>
+        </MainLayout>
     );
 };
 
 export default RegisterScreen;
-
-/*
-import React, { useState } from "react";
-import { View, TextInput, Button, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/auth/authThunks";
-
-import { Formik } from "formik";
-import * as Yup from "yup";
-
-const registerValidationSchema = Yup.object().shape({
-    email: Yup.string()
-        .email("Email inválido")
-        .required("El email es obligatorio"),
-
-    password: Yup.string()
-        .min(6, "Mínimo 6 caracteres")
-        .required("La contraseña es obligatoria"),
-});
-
-
-const LoginScreen = ({navigation}) => {
-    const dispatch = useDispatch();
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    
-    const { loading, error } = useSelector(
-        state => state.user
-    );
-
-    const handleLogin = async () => {
-        dispatch(
-            loginUser({ email, password })
-        );
-    };
-
-    return (
-        <View>
-            <TextInput
-                placeholder = "Email"
-                onChangeText = {setEmail}
-            />
-            {error && <Text>{error}</Text>}
-
-            <TextInput
-                placeholder = "Password"
-                secureTextEntry
-                onChangeText = {setPassword}
-            />
-
-            {error && <Text>{error}</Text>}
-
-            <Button
-                title={loading ? "Entrando..." : "Login"}
-                onPress={handleLogin}
-                disabled={loading}
-            />
-            <Button
-                title="Crear cuenta"
-                onPress={() => navigation.navigate("Register")}
-            />
-        </View>
-    );
-}
-
-export default LoginScreen;*/

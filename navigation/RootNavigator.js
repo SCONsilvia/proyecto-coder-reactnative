@@ -3,7 +3,7 @@ import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
 import SplashScreen from "../screens/SplashScreen";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 

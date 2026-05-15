@@ -4,32 +4,45 @@ const linking = {
 
     config: {
         screens: {
-            Tabs: {
-                initialRouteName: "Home",
-                
+
+            Auth: {
                 screens: {
+                    Login: "login",
+                    Register: "register",
+                },
+            },
 
-                    Home: {
-                        screens: {
-                            HomeMain: "home",
-                            AddDrawing: "draw",
-                        },
-                    },
 
-                    Gallery: {
+            App: {
+                screens: {
+                    Tabs: {
+                        initialRouteName: "Home",
+                        
                         screens: {
-                            GalleryMain: "gallery",
-                            GalleryDetail: "gallery/:imageId",
-                        },
-                    },
 
-                    Settings: {
-                        screens: {
-                            SettingsMain: "settings",
+                            Home: {
+                                screens: {
+                                    HomeMain: "home",
+                                    AddDrawing: "draw",
+                                },
+                            },
+
+                            Gallery: {
+                                screens: {
+                                    GalleryMain: "gallery",
+                                    GalleryDetail: "gallery/:imageId",
+                                },
+                            },
+
+                            Settings: {
+                                screens: {
+                                    SettingsMain: "settings",
+                                },
+                            },
                         },
                     },
                 },
-            },
+            }
         },
     },
 };

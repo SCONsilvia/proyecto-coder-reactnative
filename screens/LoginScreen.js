@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunks";

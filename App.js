@@ -6,15 +6,25 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import RootNavigator from './navigation/RootNavigator';
 
-//import linking from './navigation/LinkingConfiguration';
+import linking from './navigation/LinkingConfiguration';
+
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+
+import { startSessionListener } from './core/session/sessionManager';
+startSessionListener(store);
 
 export default function App() {
   return (
     <SafeAreaProvider>
-     
-      <NavigationContainer /*linking = {linking}*/>
-        <RootNavigator />
-      </NavigationContainer>
+      <Provider store = {store}>
+
+            <NavigationContainer linking = {linking}>
+              <RootNavigator />
+            </NavigationContainer>
+
+      </Provider>
+      
     
       <StatusBar style="dark" />
     </SafeAreaProvider>

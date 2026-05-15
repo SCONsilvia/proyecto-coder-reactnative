@@ -1,22 +1,48 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import TabNavigator from "./TabNavigator";
+import AuthStack from "./AuthStack";
+import AppStack from "./AppStack";
+import SplashScreen from "../screens/SplashScreen";
+
+import { useDispatch, useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
-    return (
-        <Stack.Navigator initialRouteName = "Tabs">
+    const uid = useSelector(state => state.user.uid);
+    const authChecked = useSelector(state => state.user.authChecked);
 
-            <Stack.Screen
-                name = "Tabs"
-                component = {TabNavigator}
-                options = {{ headerShown: false }}
-            />
+    // 🧠 Firebase todavía no respondió
+    if (!authChecked) {
+        return <SplashScreen />;
+    }
+
+    return (
+        <Stack.Navigator>
+
+
+            { uid ? (
+
+                // Usuario autenticado → App privada
+                <Stack.Screen
+                    name="App"//navegacion publica
+                    component={AppStack}
+                    options={{ headerShown: false }}
+                />
+
+            ) : (
+
+                // Usuario NO autenticado → Login/Register
+                <Stack.Screen
+                    name="Auth"//navegacion privada
+                    component={AuthStack}
+                    options={{ headerShown: false }}
+                />
+
+            )}
 
         </Stack.Navigator>
     );
 };
 
 export default RootNavigator;
-
 

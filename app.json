@@ -21,7 +21,8 @@
         "backgroundColor": "#ffffff",
         "softwareKeyboardLayoutMode": "pan"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.proyectoReactNativeCoderhouse"
     },
     "web": {
       "favicon": "./assets/favicon.png"

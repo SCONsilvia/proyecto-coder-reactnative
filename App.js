@@ -11,9 +11,20 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 
 import { startSessionListener } from './core/session/sessionManager';
-startSessionListener(store);
+import { useEffect } from 'react';
 
 export default function App() {
+  useEffect(() => {
+    //setup
+    const stopSessionListener = startSessionListener(store);
+
+    // cleanup automático
+    return () => {
+      stopSessionListener();
+    };
+
+  }, []);
+
   return (
     <SafeAreaProvider>
       <Provider store = {store}>

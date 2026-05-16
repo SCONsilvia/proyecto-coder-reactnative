@@ -5,7 +5,26 @@ import { setUser } from "../../features/auth/userSlice";
 
 export const startSessionListener = (store) => {
 
+    let resolved = false;
+
+    // 🧠 Timeout de seguridad (ej: 5 segundos)
+    const timeout = setTimeout(() => {
+        if (!resolved) {
+            console.log("⚠️ Firebase no respondió → fallback");
+
+            store.dispatch(
+                setUser({
+                    uid: null,
+                    authChecked: true,
+                })
+            );
+        }
+    }, 5000);
+
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        resolved = true;
+        clearTimeout(timeout);
         
         if (firebaseUser) {
             store.dispatch(setUser({ uid: firebaseUser.uid, authChecked: true }));
@@ -15,6 +34,10 @@ export const startSessionListener = (store) => {
 
     });
 
-    return unsubscribe;
+    //cleanup TOTAL
+    return () => {
+        clearTimeout(timeout);
+        unsubscribeAuth();//funcion que devuelve onAuthStateChange es un cleapup para limpiar el lsiterne que se crea
+    };
 
 };

@@ -2,6 +2,7 @@ import { View, TextInput, Button, Text, KeyboardAvoidingView, Platform, ScrollVi
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunks";
 import MainLayout from "../layouts/MainLayout";
+import TestInternetScreen from "./TestInternetScreen";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -133,6 +134,7 @@ const LoginScreen = ({navigation}) => {
                     </Formik>
                 </ScrollView>
             </KeyboardAvoidingView>
+            <TestInternetScreen/>
         </MainLayout>
     );
 }

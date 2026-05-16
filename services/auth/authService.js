@@ -2,6 +2,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
+    sendEmailVerification,
 } from "firebase/auth";
 
 import { auth } from "../firebase/firebaseApp";
@@ -17,6 +18,9 @@ export const registerUser = async (email, password) => {
             email,
             password
         );
+        
+        //firebase manda correo automatico
+        await sendEmailVerification(userCredential.user);
         
         return userCredential.user;
     } catch (error) {

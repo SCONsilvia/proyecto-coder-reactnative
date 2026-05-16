@@ -22,14 +22,32 @@ export const startSessionListener = (store) => {
     }, 5000);
 
 
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+
         resolved = true;
         clearTimeout(timeout);
-        
+
+        // SI hay usuario
         if (firebaseUser) {
-            store.dispatch(setUser({ uid: firebaseUser.uid, authChecked: true }));
+
+            // bloquear si no verificó email
+            if (!freshUser.emailVerified) {
+                console.log("Email no verificado");
+
+                await auth.signOut();
+
+                store.dispatch(
+                    setUser({ uid: null, authChecked: true })
+                );
+
+                return;
+            }
+
+            // usuario válido
+            store.dispatch(setUser({uid: freshUser.uid, authChecked: true,}));
+
         } else {
-            store.dispatch(setUser({ uid: null, authChecked: true }));
+            store.dispatch(setUser({uid: null, authChecked: true,}));
         }
 
     });
@@ -37,7 +55,7 @@ export const startSessionListener = (store) => {
     //cleanup TOTAL
     return () => {
         clearTimeout(timeout);
-        unsubscribeAuth();//funcion que devuelve onAuthStateChange es un cleapup para limpiar el lsiterne que se crea
+        unsubscribe();//funcion que devuelve onAuthStateChange es un cleapup para limpiar el lsiterne que se crea
     };
 
 };

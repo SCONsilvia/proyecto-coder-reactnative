@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, logoutUser, registerUser } from "./authThunks";
+import { loginUser, logoutUser, registerUser, checkEmailVerification, resendVerificationEmail } from "./authThunks";
 
 const initialState = {
     uid: null,
     photoURL: null,
     authChecked: false,
+    emailVerified: false,
     loading: false,
     error: null,
 };
@@ -17,6 +18,7 @@ const userSlice = createSlice({
         setUser(state, action) {
             state.uid = action.payload?.uid ?? null;
             state.authChecked = action.payload?.authChecked ?? state.authChecked;
+            state.emailVerified = action.payload?.emailVerified ?? state.emailVerified;
         },
     },
 
@@ -56,7 +58,33 @@ const userSlice = createSlice({
         // LOGOUT
         .addCase(logoutUser.fulfilled, (state) => {
             state.uid = null;
-        });
+        })
+
+        //CHECK EMAIL
+        .addCase(checkEmailVerification.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(checkEmailVerification.fulfilled, (state, action) => {
+            state.loading = false;
+            state.emailVerified = action.payload;
+        })
+        .addCase(checkEmailVerification.rejected, (state) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+        //Resend
+        .addCase(resendVerificationEmail.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(resendVerificationEmail.fulfilled, (state) => {
+            state.loading = false;
+        })
+        .addCase(resendVerificationEmail.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
     },
 });
 

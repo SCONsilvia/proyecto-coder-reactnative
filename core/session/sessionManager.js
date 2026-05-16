@@ -29,25 +29,11 @@ export const startSessionListener = (store) => {
 
         // SI hay usuario
         if (firebaseUser) {
-
-            // bloquear si no verificó email
-            if (!freshUser.emailVerified) {
-                console.log("Email no verificado");
-
-                await auth.signOut();
-
-                store.dispatch(
-                    setUser({ uid: null, authChecked: true })
-                );
-
-                return;
-            }
-
             // usuario válido
-            store.dispatch(setUser({uid: freshUser.uid, authChecked: true,}));
+            store.dispatch(setUser({uid: firebaseUser.uid, emailVerified: firebaseUser.emailVerified, authChecked: true,}));
 
         } else {
-            store.dispatch(setUser({uid: null, authChecked: true,}));
+            store.dispatch(setUser({uid: null, emailVerified: false, authChecked: true,}));
         }
 
     });

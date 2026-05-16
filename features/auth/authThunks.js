@@ -43,3 +43,27 @@ export const registerUser = createAsyncThunk(
         }
     }
 );
+
+export const resendVerificationEmail = createAsyncThunk(
+    "auth/resendVerificationEmail",
+    async (_, { rejectWithValue }) => {
+        try {
+            await authService.verifyEmailUser();
+            return true;
+        } catch (errorCode) {
+            return rejectWithValue(errorCode);
+        }
+    }
+);
+
+export const checkEmailVerification  = createAsyncThunk(
+    "auth/checkEmailVerification",
+    async (_, { rejectWithValue }) => {
+        try {
+            const verified = await authService.reloadUser();
+            return verified;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);

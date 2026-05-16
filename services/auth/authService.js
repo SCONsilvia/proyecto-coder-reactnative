@@ -3,6 +3,7 @@ import {
     signInWithEmailAndPassword,
     signOut,
     sendEmailVerification,
+    reload,
 } from "firebase/auth";
 
 import { auth } from "../firebase/firebaseApp";
@@ -19,14 +20,44 @@ export const registerUser = async (email, password) => {
             password
         );
         
-        //firebase manda correo automatico
         await sendEmailVerification(userCredential.user);
-        
+
         return userCredential.user;
     } catch (error) {
         throw error.code;
     }
 };
+
+/*
+Verify email
+*/
+export const verifyEmailUser = async () => {
+    try {
+        const user = auth.currentUser;
+
+        if (!user) throw "no-user";
+        //firebase manda correo automatico
+        await sendEmailVerification(user);
+        
+        return true;
+    } catch (error) {
+        throw error.code;
+    }
+};
+
+/*
+Reload User
+*/
+export const reloadUser = async () => {
+    const user = auth.currentUser;
+
+    if (!user) throw "no-user";
+
+    await reload(user);
+
+    return user.emailVerified;
+};
+
 
 /*
 Login

@@ -19,7 +19,6 @@ const RootNavigator = () => {
     return (
         <Stack.Navigator>
 
-
             { uid ? (
 
                 // Usuario autenticado → App privada

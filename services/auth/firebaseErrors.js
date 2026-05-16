@@ -19,6 +19,9 @@ export const firebaseAuthErrors = {
 
     "auth/too-many-requests": 
         "Demasiados intentos. Esperá unos segundos antes de intentar nuevamente.",
+
+    "auth/network-request-failed":
+        "Sin conexión, revisá tu internet.",
         
     default:
         "Ocurrió un error inesperado."

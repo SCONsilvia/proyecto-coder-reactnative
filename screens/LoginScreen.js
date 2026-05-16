@@ -1,4 +1,4 @@
-import { View, TextInput, Button, Text } from "react-native";
+import { View, TextInput, Button, Text, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunks";
 import MainLayout from "../layouts/MainLayout";
@@ -52,77 +52,87 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <MainLayout>
-            <Formik
-                //Estado inicial del formulario.
-                initialValues = {{ email: "", password: "" }}
-                validationSchema = {loginValidationSchema}
-                onSubmit = {handleLogin}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined}
             >
-                {({
-                    handleChange,
-                    handleSubmit,
-                    handleBlur,
-                    values,
-                    //Errores que devuelve Yup.
-                    errors,
-                    // touched Solo muestra error si el usuario tocó el input.
-                    touched,
-                }) => (
-                    <View>
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Formik
+                        //Estado inicial del formulario.
+                        initialValues = {{ email: "", password: "" }}
+                        validationSchema = {loginValidationSchema}
+                        onSubmit = {handleLogin}
+                    >
+                        {({
+                            handleChange,
+                            handleSubmit,
+                            handleBlur,
+                            values,
+                            //Errores que devuelve Yup.
+                            errors,
+                            // touched Solo muestra error si el usuario tocó el input.
+                            touched,
+                        }) => (
+                            <View>
 
-                        <TextInput
-                            placeholder="Email"
-                            value={values.email}
-                            //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
-                            onChangeText={handleChange("email")}
-                            onBlur={handleBlur("email")}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            textContentType="emailAddress"
-                            autoComplete="email"
-                        />
+                                <TextInput
+                                    placeholder="Email"
+                                    value={values.email}
+                                    //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
+                                    onChangeText={handleChange("email")}
+                                    onBlur={handleBlur("email")}
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    textContentType="emailAddress"
+                                    autoComplete="email"
+                                />
 
-                        {touched.email && errors.email && (
-                        <Text>{errors.email}</Text>
+                                {touched.email && errors.email && (
+                                <Text>{errors.email}</Text>
+                                )}
+
+                                <TextInput
+                                    placeholder="Password"
+                                    secureTextEntry
+                                    value={values.password}
+                                    onChangeText={handleChange("password")}
+                                    onBlur={handleBlur("password")}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    textContentType="password"
+                                    autoComplete="password"
+                                />
+
+                                {touched.password && errors.password && (
+                                    <Text>{errors.password}</Text>
+                                )}
+
+                                {errors.general && (
+                                    <Text style={{ color: "red" }}>
+                                        {errors.general}
+                                    </Text>
+                                )}
+
+                                <Button title={loading  ? "Ingresando..." : "Login"} onPress={handleSubmit} disabled={loading }/>
+                                {/* handleSubmit
+                                    Formik:
+                                    valida con Yup
+                                    si pasa → ejecuta onSubmit*/}
+
+                                <Button
+                                    title="Crear cuenta"
+                                    onPress={() => navigation.replace("Register")}
+                                />
+
+                            </View>
                         )}
-
-                        <TextInput
-                            placeholder="Password"
-                            secureTextEntry
-                            value={values.password}
-                            onChangeText={handleChange("password")}
-                            onBlur={handleBlur("password")}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            textContentType="password"
-                            autoComplete="password"
-                        />
-
-                        {touched.password && errors.password && (
-                            <Text>{errors.password}</Text>
-                        )}
-
-                        {errors.general && (
-                            <Text style={{ color: "red" }}>
-                                {errors.general}
-                            </Text>
-                        )}
-
-                        <Button title={loading  ? "Ingresando..." : "Login"} onPress={handleSubmit} disabled={loading }/>
-                        {/* handleSubmit
-                            Formik:
-                            valida con Yup
-                            si pasa → ejecuta onSubmit*/}
-
-                        <Button
-                            title="Crear cuenta"
-                            onPress={() => navigation.replace("Register")}
-                        />
-
-                    </View>
-                )}
-            </Formik>
+                    </Formik>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </MainLayout>
     );
 }

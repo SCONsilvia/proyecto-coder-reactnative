@@ -13,8 +13,11 @@ import { store } from './store/store';
 import { startSessionListener } from './core/session/sessionManager';
 import { useEffect } from 'react';
 
+import { initDatabase } from './services/database/database';
+
 export default function App() {
   useEffect(() => {
+    initDatabase();
     //setup
     const stopSessionListener = startSessionListener(store);
 

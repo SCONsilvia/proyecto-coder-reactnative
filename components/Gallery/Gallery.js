@@ -3,6 +3,7 @@ import { use, useState } from "react";
 import { openGallery } from "../../services/media/mediaSevirce";
 import { saveImage } from "../../services/storage/imageStorage";
 import { useSelector } from "react-redux";
+import { createDrawingWithImage } from "../../services/database/drawingService";
 
 export default function Gallery() {
     
@@ -10,15 +11,23 @@ export default function Gallery() {
     const uid = useSelector(state => state.user.uid);
 
     const handleOpen = async () => {
-        const asset = await openGallery();
-        //asset.uri = //file:///data/user/0/host.exp.exponent/cache/ImagePicker/abc123.jpg  Y ESTO ESTA EN LA CACHE TEMPOral puede borrarse cuadno cerra la ap, android limpia memoria, reistalas la app, el SO necesita espacio
-        if (!asset) return;
+        try{
+            const asset = await openGallery();
+            //asset.uri = //file:///data/user/0/host.exp.exponent/cache/ImagePicker/abc123.jpg  Y ESTO ESTA EN LA CACHE TEMPOral puede borrarse cuadno cerra la ap, android limpia memoria, reistalas la app, el SO necesita espacio
+            if (!asset) return;
 
-        // guardar permanente
-        //console.log("a",asset.uri);
-        //const savedUri = await saveImage(asset.uri, uid);
+            const data = {
+                description:  "hola a todos",
+            }
 
-        //setImage(savedUri);
+            const result = await createDrawingWithImage(data, asset, uid);
+            console.log("la repsuesta", result);
+            
+            setImage(result.savedUri);
+        }catch(err){
+            console.log("Error c", err);
+            
+        }
     };
 
     return (

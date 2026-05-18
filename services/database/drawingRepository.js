@@ -1,4 +1,5 @@
 import { dbPromise } from "./database";
+import "react-native-get-random-values";
 import { nanoid } from "nanoid";
 
 /*

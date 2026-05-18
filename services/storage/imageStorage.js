@@ -1,4 +1,5 @@
 import * as FileSystem from "expo-file-system/legacy";
+import "react-native-get-random-values";
 import { nanoid } from "nanoid";
 
 //directiorio por usuario
@@ -45,6 +46,31 @@ export const saveImage = async (uri, userId) => {
         return newPath;
     } catch (error) {
         console.error("Error guardando imagen", error);
+        throw error;
+    }
+};
+
+// borrar imagen del filesystem
+export const deleteImage = async (uri) => {
+    try {
+        if (!uri) return;
+
+        const file = await FileSystem.getInfoAsync(uri);
+
+        // evitar error si no existe
+        if (!file.exists) {
+            console.log("La imagen ya no existe:", uri);
+            return;
+        }
+
+        await FileSystem.deleteAsync(uri, {
+            idempotent: true, // no falla si ya fue borrada
+        });
+
+        console.log("Imagen eliminada:", uri);
+
+    } catch (error) {
+        console.error("Error eliminando imagen", error);
         throw error;
     }
 };

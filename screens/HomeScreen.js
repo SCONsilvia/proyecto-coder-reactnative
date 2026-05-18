@@ -2,6 +2,8 @@ import MainLayout from "../layouts/MainLayout";
 import { Text, Button } from "react-native";
 import TestInternetScreen from "./TestInternetScreen";
 import { getAllDrawings } from "../services/database/drawingRepository";
+import Camera from "../components/Camera/Camera";
+import Gallery from "../components/Gallery/Gallery";
 
 const HomeScreen = ({navigation}) => {
 
@@ -16,6 +18,9 @@ const HomeScreen = ({navigation}) => {
     return(
         <MainLayout>
             <Text>HomeScreen</Text>
+            <Text>Hello</Text>
+            <Camera/>
+            <Gallery/>
             <Button title="a" onPress={ob}/>
             <TestInternetScreen/>
         </MainLayout>

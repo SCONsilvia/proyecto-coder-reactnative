@@ -21,6 +21,9 @@ export const initDatabase  = async () => {
                     localUri TEXT NOT NULL,
                     remoteUrl TEXT,
 
+                    width INTEGER,
+                    height INTEGER,
+
                     description TEXT NOT NULL,
                     syncVersion INTEGER DEFAULT 0,
 

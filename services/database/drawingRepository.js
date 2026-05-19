@@ -66,12 +66,14 @@ export const getDrawingById = async (id, userId) => {
     try {
         const db = await dbPromise;
 
-        const drawing = await db.getOneAsync(
+        const rows  = await db.getAllAsync(
             `SELECT * FROM drawings WHERE id = ? AND userId = ?`,
             [id, userId]
         );
 
-        if (!drawing) return null;
+        if (rows.length === 0) return null;
+
+        const drawing = rows[0];
 
         console.log("drawing",drawing);
 

@@ -38,6 +38,8 @@ const GalleryStack = () => {
                 options = {{
                     //titulo del header
                     headerTitle: "Detalle",
+                    /*presentation: "transparentModal",
+                    animation: "fade"*/
                 }}
             />
         </Stack.Navigator>

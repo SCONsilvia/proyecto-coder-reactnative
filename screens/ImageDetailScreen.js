@@ -1,19 +1,15 @@
 import MainLayout from "../layouts/MainLayout";
-import { Text } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import ItemDetailContainer from "../components/ItemDetailContainer/ItemDetailContainer";
 
-const ImageDetailScreen = ({navigation}) => {
-    const route = useRoute();
+const ImageDetailScreen = ({ route }) => {
 
-    const { imageId } = route.params;
+    const { id } = route.params;
 
-    console.log(imageId);
-
-    return(
+    return (
         <MainLayout>
-            <Text>Details</Text>
+            <ItemDetailContainer id = {id}/>
         </MainLayout>
-    )
-}
+    );
+};
 
 export default ImageDetailScreen;

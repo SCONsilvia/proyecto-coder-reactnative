@@ -30,7 +30,7 @@ const linking = {
                             Gallery: {
                                 screens: {
                                     GalleryMain: "gallery",
-                                    GalleryDetail: "gallery/:imageId",
+                                    GalleryDetail: "gallery/:id",
                                 },
                             },
 

@@ -2,10 +2,13 @@ import { Button, Image, View } from "react-native";
 import { use, useState } from "react";
 import { openGallery } from "../../services/media/mediaSevirce";
 import { saveImage } from "../../services/storage/imageStorage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { createDrawingWithImage } from "../../services/database/drawingService";
+import { drawingChanged } from "../../features/drawings/drawingsSlice";
+
 
 export default function Gallery() {
+    const dispatch = useDispatch();
     
     const [image, setImage] = useState(null);
     const uid = useSelector(state => state.user.uid);
@@ -22,6 +25,7 @@ export default function Gallery() {
 
             const result = await createDrawingWithImage(data, asset, uid);
             console.log("la repsuesta", result);
+            dispatch(drawingChanged());
             
             setImage(result.savedUri);
         }catch(err){

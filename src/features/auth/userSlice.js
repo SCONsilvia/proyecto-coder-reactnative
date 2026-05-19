@@ -68,7 +68,7 @@ const userSlice = createSlice({
             state.loading = false;
             state.emailVerified = action.payload;
         })
-        .addCase(checkEmailVerification.rejected, (state) => {
+        .addCase(checkEmailVerification.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         })

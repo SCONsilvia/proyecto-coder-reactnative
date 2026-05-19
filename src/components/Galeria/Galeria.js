@@ -4,31 +4,11 @@ import { useSelector } from "react-redux";
 import { useEffect, useState, useCallback } from "react";
 import RenderItem from "../RenderItem/RenderItem";
 import { useWindowDimensions } from "react-native";
+import { useGalleryDrawings } from "../../hooks/useGalleryDrawings";
 
 const Galeria = () => {
 
-    const uid = useSelector(state => state.user.uid);
-    const version = useSelector(state => state.drawings.version);
-
-    const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const { width } = useWindowDimensions();
-    const ITEM_SIZE = 180;//cada imagen medira aprox 180px
-    const numColumns = Math.min( 5, Math.max(2, Math.floor(width / ITEM_SIZE)) );
-
-    useEffect(() => {
-        const loadDrawings = async () => {
-            setLoading(true);
-
-            const resp = await getUserDrawings(uid);
-            setItems(resp);
-
-            setLoading(false);
-        };
-
-        loadDrawings();
-    },[uid, version])
+    const { items, loading, numColumns } = useGalleryDrawings();
     
     //Memoriza la función renderItem
     //const renderItem = useCallback(fn, []); React, reutilizá esta función mientras sus dependencias no cambien.
@@ -37,7 +17,7 @@ const Galeria = () => {
         []
     );
 
-    if (loading) return <ActivityIndicator size="large" />
+    if (loading) return <ActivityIndicator size = "large" />
     
     return(
         <View style = {styles.container}>

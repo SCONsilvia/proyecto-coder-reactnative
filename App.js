@@ -3,17 +3,17 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import RootNavigator from './navigation/RootNavigator';
+import RootNavigator from './src/navigation/RootNavigator';
 
-import linking from './navigation/LinkingConfiguration';
+import linking from './src/navigation/LinkingConfiguration';
 
 import { Provider } from 'react-redux';
-import { store } from './store/store';
+import { store } from './src/store/store';
 
-import { startSessionListener } from './core/session/sessionManager';
+import { startSessionListener } from './src/core/session/sessionManager';
 import { useEffect } from 'react';
 
-import { initDatabase } from './services/database/database';
+import { initDatabase } from './src/services/database/database';
 
 export default function App() {
   useEffect(() => {

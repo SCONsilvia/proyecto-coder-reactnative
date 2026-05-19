@@ -34,6 +34,7 @@ export const insertDrawing = async (data, uid) => {
 
     } catch (error) {
         console.error(error);
+        //error silenciosos arreglar
     }
 };
 /*

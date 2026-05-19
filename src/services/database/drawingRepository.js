@@ -16,15 +16,18 @@ console.log("c");
 
         await db.runAsync(
             `INSERT INTO drawings
-            (id, userId, localUri, remoteUrl, description, status, syncVersion, lastError, createdAt, updatedAt)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            (id, userId, localUri, remoteUrl, width, height, description, status, pendingAction, syncVersion, lastError, createdAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 id,
                 uid,
                 data.localUri,
                 null,
+                data.width,
+                data.height,
                 data.description,
                 "pending",
+                "create",
                 0,
                 null,
                 now,
@@ -48,7 +51,7 @@ export const getAllDrawings = async (userId) => {
         const db = await dbPromise;
 
         const drawings = await db.getAllAsync(
-            `SELECT * FROM drawings WHERE userId = ?`,
+            `SELECT * FROM drawings WHERE userId = ? AND isArchived != 1`,
             [userId]
         );
 
@@ -70,7 +73,7 @@ export const getDrawingById = async (id, userId) => {
         const db = await dbPromise;
 
         const rows  = await db.getAllAsync(
-            `SELECT * FROM drawings WHERE id = ? AND userId = ?`,
+            `SELECT * FROM drawings WHERE id = ? AND userId = ? AND isArchived != 1`,
             [id, userId]
         );
 
@@ -97,15 +100,19 @@ export const updateDrawing = async (data, userId) => {
 
         const now = new Date().toISOString();
 
-        await db.runAsync(
+        const resp = await db.runAsync(
             `UPDATE drawings
             SET description = ?,
+                isArchived = ?,
                 updatedAt = ?,
                 status = "pending",
+                pendingAction = "update",
                 syncVersion = syncVersion + 1
             WHERE id = ? AND userId = ?`,
-            [data.description, now, data.id, userId]
+            [data.description, data.isArchived, now, data.id, userId]
         );
+        console.log("archiva",data, resp);
+        
 
     } catch (error) {
         console.error(error);
@@ -123,7 +130,8 @@ export const deleteDrawing = async (id, userId) => {
 
         await db.runAsync(
             `UPDATE drawings
-            SET status = "deleted"
+            SET status = "pending",
+            pendingAction = "delete"
             WHERE id = ? AND userId = ?`,
             [id, userId]
         );
@@ -156,13 +164,14 @@ export const deleteAllDrawing = async (userId) => {
     }
 };
 
-export const getPendingDrawings = async (userId) => {
+export const getPendingActions = async (userId) => {
     const db = await dbPromise;
 
     return await db.getAllAsync(
         `SELECT * FROM drawings
         WHERE userId = ?
-        AND status IN ("pending", "failed")`,
+        AND status IN ("pending", "failed") 
+        ORDER BY updatedAt ASC`,
         [userId]
     );
 };
@@ -172,13 +181,22 @@ console.log("actualizado");
 
     const db = await dbPromise;
 
-    await db.runAsync(
-        `UPDATE drawings
-        SET status = 'synced',
-            remoteUrl = ?
-        WHERE id = ?`,
-        [remoteUrl, id]
-    );
+    if(remoteUrl){
+        await db.runAsync(
+            `UPDATE drawings
+            SET status = 'synced',
+                remoteUrl = ?
+            WHERE id = ?`,
+            [remoteUrl, id]
+        );
+    }else{
+        await db.runAsync(
+            `UPDATE drawings
+            SET status = 'synced'
+            WHERE id = ?`,
+            [id]
+        );
+    }
     console.log("actualizando completa remoteurl:", remoteUrl);
 };
 

@@ -2,6 +2,7 @@
 
 import * as drawingRepository from "./drawingRepository";
 import { saveImage, deleteImage } from "../storage/imageStorage";
+import { requestSync } from "../../core/sync/syncTrigger";
 
 export const createDrawingWithImage = async (data, asset, uid) => {
 
@@ -13,7 +14,7 @@ console.log("0");
 
         // 1 guardar imagen
         savedUri = await saveImage(asset.uri, uid);
-console.log("1");
+console.log("1", asset);
 
         // 2 guardar DB
         const drawingId = await drawingRepository.insertDrawing({
@@ -23,6 +24,8 @@ console.log("1");
             description: data.description,
         }, uid);
 console.log("2");
+
+        requestSync();
         return { drawingId, savedUri };
 
     } catch (error) {
@@ -104,6 +107,9 @@ export const updateDrawing = async (data, userId) => {
 
         await drawingRepository.updateDrawing(data, userId);
 
+        console.log("Se supone que se llama");
+        
+        requestSync();
         // 🔥 marcar para sync automática
         // enqueueSync()
 
@@ -148,9 +154,9 @@ export const deleteAllUserDrawings = async (userId) => {
 /*
 OBTENER PENDIENTES PARA SYNC
 */
-export const getPendingDrawings = async (userId) => {
+export const getPendingActions = async (userId) => {
     try {
-        return await drawingRepository.getPendingDrawings(userId);
+        return await drawingRepository.getPendingActions(userId);
     } catch (error) {
         console.error(error);
         return [];

@@ -5,6 +5,7 @@ import {
     ActivityIndicator,
     StyleSheet,
     ScrollView,
+    Button
 } from "react-native";
 
 const InfoRow = ({ label, value }) => (
@@ -19,7 +20,23 @@ const formatDate = (date) => {
     return new Date(date).toLocaleString();
 };
 
+import { useSelector } from "react-redux";
+import { updateDrawing } from "../../services/database/drawingService";
+
 const ItemDetail = ({ item }) => {
+
+    const uid = useSelector(state => state.user.uid);
+
+    const archiva = async () => {
+        const data = {
+            id : item.id,
+            description : "nueva",
+            isArchived : 1,
+        }
+        const resp = await updateDrawing(data, uid);
+        console.log("la respusad", resp);
+        
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -61,6 +78,8 @@ const ItemDetail = ({ item }) => {
                 />
 
             </View>
+
+            <Button title="Archiva" onPress= {archiva}/>
 
         </ScrollView>
     );

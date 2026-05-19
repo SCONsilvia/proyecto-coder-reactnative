@@ -18,6 +18,8 @@ import { runSync } from './src/core/sync/syncEngine';
 import NetInfo from "@react-native-community/netinfo";
 import { useSelector } from 'react-redux';
 
+import { registerSyncTrigger } from './src/core/sync/syncTrigger';
+
 function AppContent() {
 
     const uid = useSelector(state => state.user.uid);
@@ -43,13 +45,17 @@ function AppContent() {
         //si no hay usuaio logueado no hacemos nada
         if (!uid) return;
 console.log("conentando");
+        const run = () => runSync(uid);
+
         //para que sincronice siempre al inicio
-        runSync(uid); // ← sync inicial
+        run(); // sync inicial
+
+        registerSyncTrigger(run);
 
         //Cuando el usuario exista y vuelva el internet, sincronizá los datos.
         const unsubscribe = NetInfo.addEventListener(state => {
         if (state.isConnected && state.isInternetReachable) {
-            runSync(uid);
+            run();
         }
         });
 console.log("conexion lista");

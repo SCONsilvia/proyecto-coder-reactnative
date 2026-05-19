@@ -26,6 +26,7 @@ export const initDatabase  = async () => {
 
                     description TEXT NOT NULL,
                     syncVersion INTEGER DEFAULT 0,
+                    lastError Text,
 
                     status TEXT NOT NULL,
 

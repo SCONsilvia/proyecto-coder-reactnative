@@ -12,11 +12,12 @@ export const insertDrawing = async (data, uid) => {
 
         const id = nanoid();
         const now = new Date().toISOString();
+console.log("c");
 
         await db.runAsync(
             `INSERT INTO drawings
-            (id, userId, localUri, remoteUrl, description, status, syncVersion, createdAt, updatedAt)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            (id, userId, localUri, remoteUrl, description, status, syncVersion, lastError, createdAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 id,
                 uid,
@@ -25,6 +26,7 @@ export const insertDrawing = async (data, uid) => {
                 data.description,
                 "pending",
                 0,
+                null,
                 now,
                 now,
             ]
@@ -34,7 +36,7 @@ export const insertDrawing = async (data, uid) => {
 
     } catch (error) {
         console.error(error);
-        //error silenciosos arreglar
+        throw error;
     }
 };
 /*
@@ -56,7 +58,7 @@ export const getAllDrawings = async (userId) => {
 
     } catch (error) {
         console.error("Error obteniendo drawings", error);
-        return null;
+        throw error;
     }
 };
 
@@ -82,7 +84,7 @@ export const getDrawingById = async (id, userId) => {
 
     } catch (error) {
         console.error("Error obteniendo drawing", error);
-        return null;
+        throw error;
     }
 };
 
@@ -107,6 +109,7 @@ export const updateDrawing = async (data, userId) => {
 
     } catch (error) {
         console.error(error);
+        throw error;
     }
 };
 
@@ -127,6 +130,7 @@ export const deleteDrawing = async (id, userId) => {
 
     } catch (error) {
         console.error(error);
+        throw error;
     }
 };
 
@@ -148,6 +152,7 @@ export const deleteAllDrawing = async (userId) => {
 
     } catch (error) {
         console.error("Error eliminandos", error);
+        throw error;
     }
 };
 
@@ -157,7 +162,67 @@ export const getPendingDrawings = async (userId) => {
     return await db.getAllAsync(
         `SELECT * FROM drawings
         WHERE userId = ?
-        AND status IN ("pending","deleted")`,
+        AND status IN ("pending", "failed")`,
         [userId]
     );
+};
+
+export const markAsSynced = async (id, remoteUrl) => {
+console.log("actualizado");
+
+    const db = await dbPromise;
+
+    await db.runAsync(
+        `UPDATE drawings
+        SET status = 'synced',
+            remoteUrl = ?
+        WHERE id = ?`,
+        [remoteUrl, id]
+    );
+    console.log("actualizando completa remoteurl:", remoteUrl);
+};
+
+export const markAsFailed = async (id, error) => {
+    console.log("marcando como failed", id);
+
+    const db = await dbPromise;
+
+    const now = new Date().toISOString();
+
+    await db.runAsync(
+        `UPDATE drawings
+        SET status = 'failed',
+            updatedAt = ?,
+            lastError = ?
+        WHERE id = ?`,
+        [
+            now, 
+            JSON.stringify({
+                message: error.message,
+                code: error.code ?? "unknown",
+            }),
+            id
+        ]
+    );
+};
+
+export const markAsSyncing = async (id) => {
+    const db = await dbPromise;
+
+    await db.runAsync(
+        `UPDATE drawings
+        SET status = 'syncing'
+        WHERE id = ?`,
+        [id]
+    );
+};
+
+export const recoverInterruptedSync = async () => {
+    const db = await dbPromise;
+
+    await db.runAsync(`
+        UPDATE drawings
+        SET status = 'pending'
+        WHERE status = 'syncing'
+    `);
 };

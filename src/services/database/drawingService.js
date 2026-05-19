@@ -9,9 +9,11 @@ export const createDrawingWithImage = async (data, asset, uid) => {
 
     try {
         if (!uid) throw new Error("UserId requerido");
+console.log("0");
 
         // 1 guardar imagen
         savedUri = await saveImage(asset.uri, uid);
+console.log("1");
 
         // 2 guardar DB
         const drawingId = await drawingRepository.insertDrawing({
@@ -20,13 +22,13 @@ export const createDrawingWithImage = async (data, asset, uid) => {
             height: asset.height,
             description: data.description,
         }, uid);
-
+console.log("2");
         return { drawingId, savedUri };
 
     } catch (error) {
 
         // 🔥 ROLLBACK MANUAL
-        console.log("ROOOO");
+        console.log("ROOOO", error);
         
         if (savedUri) {
             await deleteImage(savedUri);
@@ -149,7 +151,6 @@ OBTENER PENDIENTES PARA SYNC
 export const getPendingDrawings = async (userId) => {
     try {
         return await drawingRepository.getPendingDrawings(userId);
-
     } catch (error) {
         console.error(error);
         return [];

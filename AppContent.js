@@ -16,11 +16,14 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import { runSync } from './src/core/sync/syncEngine';
 
 import NetInfo from "@react-native-community/netinfo";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { drawingChanged } from './src/features/drawings/drawingsSlice';
 
-import { registerSyncTrigger } from './src/core/sync/syncTrigger';
+import { registerSyncTrigger, clearSyncTrigger } from './src/core/sync/syncTrigger';
 
 function AppContent() {
+    
+    const dispatch = useDispatch(); 
 
     const uid = useSelector(state => state.user.uid);
 
@@ -46,7 +49,9 @@ function AppContent() {
         //si no hay usuaio logueado no hacemos nada
         if (!uid) return;
 console.log("conentando");
-        const run = () => runSync(uid);
+
+        const onDownload = () => dispatch(drawingChanged()); //para avisar de cambios
+        const run = () => runSync(uid, onDownload);
 
         //para que sincronice siempre al inicio
         run(); // sync inicial
@@ -61,7 +66,10 @@ console.log("conentando");
         });
 console.log("conexion lista");
         //eliminamos el listener
-        return unsubscribe;
+        return () => {
+            clearSyncTrigger();  // limpiamos el trigger
+            unsubscribe();
+        };
 
     }, [uid]);
 

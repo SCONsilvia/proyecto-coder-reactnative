@@ -1,4 +1,4 @@
-import { upsertRemoteDrawing } from "../../services/database/drawingRepository";
+import { upsertRemoteDrawing, markPendingUpdate } from "../../services/database/drawingRepository";
 import { requestSync } from "./syncTrigger";
 
 export const resolveConflict = async (localDrawing, remote) => {
@@ -13,17 +13,28 @@ export const resolveConflict = async (localDrawing, remote) => {
     if (localDrawing.updatedAt > remote.updatedAt) {
 
         console.log("LOCAL WINS");
+        //si gana local ponemos status en pending y  pendingAction en update para que se suba cuando hagamos requesSync
 
+        //ya que vamos a actualizar de una vez en updateMetada entonce no marcamos nada mejor
+        // aseguramos que vuelva a subirse
+        //await markPendingUpdate(localDrawing.id);
+
+        //esto ya no lo requerimos ya que en updateMetaData vamos a cambiar los datos del firebase ahi mismo
         // pisamos remoto después
-        requestSync();
+        //requestSync();
 
         return "LOCAL_WINS";
 
     } else {
 
         console.log("REMOTE WINS");
+        //si gana remote debemos descargar los cambios a  la base de datos local y luego marcamos status en sincronizado
 
+        // pisamos local
         await upsertRemoteDrawing(remote);
+
+        //  marcamos synced para evitar loop
+        await markAsSynced(remote.id);
 
         return "REMOTE_WINS";
     }

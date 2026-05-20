@@ -8,9 +8,9 @@ export const downloadImage = async (remoteUrl, uid, id) => {
 
     try {
         // 1 archivo temporal
-        const tempPath =
-            FileSystem.cacheDirectory + `temp_${id}`;
-
+        const ext = remoteUrl.split("?")[0].split(".").pop();
+        const tempPath = FileSystem.cacheDirectory + `temp_${id}.${ext}`;
+        
         // 2 descargar desde internet
         const result = await FileSystem.downloadAsync(
             remoteUrl,

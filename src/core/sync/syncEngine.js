@@ -5,7 +5,8 @@ import { downloadRemoteChanges } from "./downloadRemote";
 let syncing = false;
 let pendingRun = false;
 
-export async function runSync(uid) {
+//onDownloadComplete va a ser para mandar mensaje de que ocurrieron cambios
+export async function runSync(uid, onDownloadComplete) {
 
     // 🚫 ya hay sync corriendo
     if (syncing) {
@@ -25,6 +26,8 @@ export async function runSync(uid) {
         // ✅ 2 BAJAR
         await downloadRemoteChanges(uid);
 
+        onDownloadComplete?.(); //si fue pasado lo llamamos
+
         console.log("✅ SYNC END");
 
     } catch (e) {
@@ -35,7 +38,7 @@ export async function runSync(uid) {
         // 🔥 alguien pidió sync mientras corría
         if (pendingRun) {
             pendingRun = false;
-            runSync(uid);
+            runSync(uid, onDownloadComplete);
         }
     }
 }

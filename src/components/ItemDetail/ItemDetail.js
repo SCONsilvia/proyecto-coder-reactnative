@@ -20,10 +20,12 @@ const formatDate = (date) => {
     return new Date(date).toLocaleString();
 };
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateDrawing } from "../../services/database/drawingService";
+import { drawingChanged } from "../../features/drawings/drawingsSlice";
 
 const ItemDetail = ({ item }) => {
+    const dispatch = useDispatch()
 
     const uid = useSelector(state => state.user.uid);
 
@@ -34,6 +36,7 @@ const ItemDetail = ({ item }) => {
             isArchived : 0,
         }
         const resp = await updateDrawing(data, uid);
+        dispatch(drawingChanged());
         //console.log("la respusad", resp);
         
     }

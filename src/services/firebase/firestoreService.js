@@ -50,7 +50,7 @@ export const updateMetadata = async (drawing) => {
     console.log("conflictosssssssssssss", drawing, remote);
     if (remote.syncVersion !== drawing.syncVersion - 1) {
         console.log("CONFLICCTOOTOOTOTOTOO");
-        await resolveConflict(drawing, remote)
+        const result = await resolveConflict(drawing, remote)
         if (result === "REMOTE_WINS") {
             return; // 🔥 PARAR ACA
         }
@@ -60,6 +60,7 @@ export const updateMetadata = async (drawing) => {
 
     const drawingSanitize = sanitizeDrawing(drawing);
 
+    //subimos cambios locales al firebase de una
     await setDoc(ref, {
         ...drawingSanitize,
         syncVersion: drawing.syncVersion,

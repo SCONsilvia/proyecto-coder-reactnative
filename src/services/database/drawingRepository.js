@@ -234,6 +234,17 @@ export const markAsSyncing = async (id) => {
     );
 };
 
+export const markPendingUpdate = async (id) => {
+    const db = await dbPromise;
+
+    await db.runAsync(`
+        UPDATE drawings
+        SET status = 'pending',
+            pendingAction = 'update'
+        WHERE id = ?
+    `, [id]);
+};
+
 export const recoverInterruptedSync = async () => {
     const db = await dbPromise;
 
@@ -302,7 +313,9 @@ console.log("BD UPDATE");
                 description = ?,
                 isArchived = ?,
                 syncVersion = ?,
-                updatedAt = ?
+                updatedAt = ?,
+                status = ?,
+                pendingAction = ?
             WHERE id = ?
         `,[
             drawing.localUri,
@@ -311,6 +324,8 @@ console.log("BD UPDATE");
             drawing.isArchived ? 1 : 0,
             drawing.syncVersion ?? 0,
             drawing.updatedAt,
+            "synced",
+            null,
             drawing.id
         ]);
         console.log("BD FIN UPDATE");

@@ -58,6 +58,11 @@ const userSlice = createSlice({
         // LOGOUT
         .addCase(logoutUser.fulfilled, (state) => {
             state.uid = null;
+            //reiniciamos todos
+            state.photoURL = null;
+            state.emailVerified = false;
+            state.loading = false;
+            state.error = null;
         })
 
         //CHECK EMAIL

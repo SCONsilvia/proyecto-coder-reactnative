@@ -17,7 +17,7 @@ const Galeria = () => {
         []
     );
 
-    if (loading) return <ActivityIndicator size = "large" />
+    if (loading && items.length === 0) return <ActivityIndicator size="large" />
     
     return(
         <View style = {styles.container}>

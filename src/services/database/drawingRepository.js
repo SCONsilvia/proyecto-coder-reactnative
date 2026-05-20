@@ -97,13 +97,21 @@ export const updateDrawing = async (data, userId) => {
 
         const now = new Date().toISOString();
 
+        //si nunca se ha creado como tal no cambiamos el pendingAction
         const resp = await db.runAsync(
             `UPDATE drawings
             SET description = ?,
                 isArchived = ?,
                 updatedAt = ?,
                 status = "pending",
-                pendingAction = "update",
+
+                pendingAction =
+                    CASE
+                        WHEN pendingAction = 'create'
+                        THEN 'create'
+                        ELSE 'update'
+                    END,
+            
                 syncVersion = syncVersion + 1
             WHERE id = ? AND userId = ?`,
             [data.description, data.isArchived, now, data.id, userId]

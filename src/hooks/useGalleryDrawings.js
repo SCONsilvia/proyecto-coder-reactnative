@@ -19,19 +19,23 @@ export const useGalleryDrawings = () => {
         Math.max(2, Math.floor(width / ITEM_SIZE))
     );
 
+ // Solo resetea cuando cambia el usuario (login/logout)
     useEffect(() => {
+        setItems([]);
+        setLoading(true);
+    }, [uid]);
 
-        const loadDrawings = async () => {
-            setLoading(true);
+    // Refresca silenciosamente en cada cambio de datos
+    useEffect(() => {
+        if (!uid) return;
 
+        const load = async () => {
             const resp = await getUserDrawings(uid);
             setItems(resp);
-
             setLoading(false);
         };
 
-        loadDrawings();
-
+        load();
     }, [uid, version]);
 
     return {

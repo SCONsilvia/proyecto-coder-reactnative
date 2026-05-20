@@ -1,4 +1,4 @@
-import { doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
 //esto deberia de estar en otro sitio
@@ -28,7 +28,7 @@ export const createMetadata = async (drawing) => {
 
     await setDoc(
         doc(db, "drawings", drawing.id),
-        sanitizeDrawing(drawing)
+        { ...sanitizeDrawing(drawing), updatedAtServer: serverTimestamp()}
     );
 };
 
@@ -64,6 +64,7 @@ export const updateMetadata = async (drawing) => {
     await setDoc(ref, {
         ...drawingSanitize,
         syncVersion: drawing.syncVersion,
+        updatedAtServer: serverTimestamp(),
     }, { merge: true });//evita sobrescribir todo
 
 

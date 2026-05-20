@@ -32,10 +32,12 @@ export const registerUser = async (email, password) => {
 Verify email
 */
 export const verifyEmailUser = async () => {
-    try {
-        const user = auth.currentUser;
+    const user = auth.currentUser;
+    //lo ponemos fuera del try por si da error y entra aca no vaya al catch ya que no existiria error.code
+    if (!user) throw "auth/no-current-user";
 
-        if (!user) throw "no-user";
+    try {
+
         //firebase manda correo automatico
         await sendEmailVerification(user);
         

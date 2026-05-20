@@ -10,7 +10,7 @@ export const resolveConflict = async (localDrawing, remote) => {
     // estrategia simple profesional:
     // LAST EDIT WINS usando updatedAt
 
-    if (localDrawing.updatedAt > remote.updatedAt) {
+    if (localDrawing.updatedAt > remote.updatedAtServer) {
 
         console.log("LOCAL WINS");
         //si gana local ponemos status en pending y  pendingAction en update para que se suba cuando hagamos requesSync

@@ -54,9 +54,9 @@ export const downloadRemoteChanges = async (uid) => {
 
         if (
             !newestDate ||
-            remoteDrawing.updatedAt > newestDate
+            remoteDrawing.updatedAtServer > newestDate
         ) {
-            newestDate = remoteDrawing.updatedAt;
+            newestDate = remoteDrawing.updatedAtServer;
         }
     }
 

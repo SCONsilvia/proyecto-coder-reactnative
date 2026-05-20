@@ -5,8 +5,21 @@ import { downloadRemoteChanges } from "./downloadRemote";
 let syncing = false;
 let pendingRun = false;
 
+import NetInfo from "@react-native-community/netinfo";
+
 //onDownloadComplete va a ser para mandar mensaje de que ocurrieron cambios
 export async function runSync(uid, onDownloadComplete) {
+    //lo ponemos aca tambien el NetInfo para que la consulta await getDocs(q); de download no se ejecute si no hay internet y asi no de error y esto pasa gracias a la primera llamada que hacemos en AppContent
+    const state = await NetInfo.fetch();
+
+    const online =
+        state.isConnected &&
+        state.isInternetReachable;
+
+    if (!online) {
+        console.log("📴 Offline → skip sync");
+        return;
+    }
 
     // 🚫 ya hay sync corriendo
     if (syncing) {

@@ -12,7 +12,6 @@ import { useEffect } from 'react';
 
 import { initDatabase, initDatabaseSync } from './src/services/database/database';
 
-import { useNetInfo } from '@react-native-community/netinfo';
 import { runSync } from './src/core/sync/syncEngine';
 
 import NetInfo from "@react-native-community/netinfo";

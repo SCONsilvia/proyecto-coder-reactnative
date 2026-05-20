@@ -16,9 +16,17 @@ export const useDrawing = (id) => {
     const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Solo resetea a "loading" cuando navegás a un item diferente
     useEffect(() => {
+        setItem(null);
+        setLoading(true);
+    }, [id]);
+
+    // Recarga los datos sin mostrar spinner en refreshes
+    useEffect(() => {
+        if (!uid) return;
+
         const load = async () => {
-            setLoading(true);
             const resp = await getDrawing(id, uid);
             setItem(resp);
             setLoading(false);

@@ -3,6 +3,8 @@
 import * as drawingRepository from "./drawingRepository";
 import { saveImage, deleteImage } from "../storage/imageStorage";
 import { requestSync } from "../../core/sync/syncTrigger";
+import "react-native-get-random-values";
+import { nanoid } from "nanoid";
 
 export const createDrawingWithImage = async (data, asset, uid) => {
 
@@ -10,14 +12,16 @@ export const createDrawingWithImage = async (data, asset, uid) => {
 
     try {
         if (!uid) throw new Error("UserId requerido");
+        const id = nanoid();
 console.log("0");
 
         // 1 guardar imagen
-        savedUri = await saveImage(asset.uri, uid);
+        savedUri = await saveImage(asset.uri, uid, id);
 console.log("1", asset);
 
         // 2 guardar DB
-        const drawingId = await drawingRepository.insertDrawing({
+        await drawingRepository.insertDrawing({
+            id : id,
             localUri: savedUri,
             width: asset.width,
             height: asset.height,
@@ -26,7 +30,7 @@ console.log("1", asset);
 console.log("2");
 
         requestSync();
-        return { drawingId, savedUri };
+        return { drawingId : id, savedUri };
 
     } catch (error) {
 

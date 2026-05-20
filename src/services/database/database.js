@@ -68,3 +68,24 @@ export const initDatabase  = async () => {
     }
 };
 
+export const initDatabaseSync  = async () => {
+    try {
+        const db = await dbPromise;
+
+        await db.withTransactionAsync(async () => {
+
+            await db.execAsync(`
+                CREATE TABLE IF NOT EXISTS sync_metadata (
+                    key TEXT PRIMARY KEY,
+                    value TEXT
+                );
+            `);
+
+        });
+
+        console.log("Tabla sync creada correctamente");
+    } catch (error) {
+        console.error("Error creando tabla", error);
+    }
+};
+

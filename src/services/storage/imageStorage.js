@@ -1,6 +1,4 @@
 import * as FileSystem from "expo-file-system/legacy";
-import "react-native-get-random-values";
-import { nanoid } from "nanoid";
 
 //directiorio por usuario
 const getUserDir = (userId) => {
@@ -29,10 +27,10 @@ export const ensureUserDir = async (userId) => {
 };
 
 //salva imagen en el directorio correspondiente
-export const saveImage = async (uri, userId) => {
+export const saveImage = async (uri, userId, id) => {
     try {
         const extension = getExtension(uri);
-        const fileName = `${nanoid()}.${extension}`;
+        const fileName = `${id}.${extension}`;
 
         const userDir = await ensureUserDir(userId);
 
@@ -42,6 +40,9 @@ export const saveImage = async (uri, userId) => {
             from: uri,
             to: newPath,
         });
+
+        console.log("antesJAJAJAJAJ", newPath);
+        
 
         return newPath;
     } catch (error) {

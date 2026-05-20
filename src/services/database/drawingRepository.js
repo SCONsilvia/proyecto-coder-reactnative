@@ -1,25 +1,22 @@
 import { dbPromise } from "./database";
-import "react-native-get-random-values";
-import { nanoid } from "nanoid";
 
 /*
 INSERTAR SESIÓN
 */
 
-export const insertDrawing = async (data, uid) => {
+export const insertDrawing = async (data, uid,) => {
     try {
         const db = await dbPromise;
 
-        const id = nanoid();
         const now = new Date().toISOString();
-console.log("c");
+console.log("c", data);
 
         await db.runAsync(
             `INSERT INTO drawings
             (id, userId, localUri, remoteUrl, width, height, description, status, pendingAction, syncVersion, lastError, createdAt, updatedAt)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
-                id,
+                data.id,
                 uid,
                 data.localUri,
                 null,
@@ -35,7 +32,7 @@ console.log("c");
             ]
         );
 
-        return id;
+        return data.id;
 
     } catch (error) {
         console.error(error);
@@ -244,3 +241,77 @@ export const recoverInterruptedSync = async () => {
         WHERE status = 'syncing'
     `);
 };
+
+export const upsertRemoteDrawing = async (drawing) => {
+
+    console.log("BD EMPECEMOS", drawing);
+    
+    const db = await dbPromise;
+
+    console.log("BD ROWS");
+    const rows = await db.getAllAsync(
+        `SELECT id FROM drawings WHERE id = ?`,
+        [drawing.id]
+    );
+
+    console.log("BD ROWS2", rows);
+    if (rows.length === 0) {
+console.log("BD INSERT");
+        // INSERT REMOTO
+        await db.runAsync(`
+            INSERT INTO drawings (
+                id,
+                userId,
+                localUri,
+                remoteUrl,
+                width,
+                height,
+                description,
+                isArchived,
+                status,
+                pendingAction,
+                syncVersion,
+                createdAt,
+                updatedAt
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'synced', "dataBase", ?, ?, ?)
+        `,[
+            drawing.id,
+            drawing.userId,
+            drawing.localUri,
+            drawing.remoteUrl,
+            drawing.width,
+            drawing.height,
+            drawing.description,
+            drawing.isArchived ? 1 : 0,
+            drawing.syncVersion ?? 0,
+            drawing.createdAt,
+            drawing.updatedAt
+        ]);
+console.log("BD FIN INSERT");
+    } else {
+console.log("BD UPDATE");
+        // UPDATE REMOTO
+        await db.runAsync(`
+            UPDATE drawings
+            SET
+                localUri = ?,
+                remoteUrl = ?,
+                description = ?,
+                isArchived = ?,
+                syncVersion = ?,
+                updatedAt = ?
+            WHERE id = ?
+        `,[
+            drawing.localUri,
+            drawing.remoteUrl,
+            drawing.description,
+            drawing.isArchived ? 1 : 0,
+            drawing.syncVersion ?? 0,
+            drawing.updatedAt,
+            drawing.id
+        ]);
+        console.log("BD FIN UPDATE");
+    }
+};
+

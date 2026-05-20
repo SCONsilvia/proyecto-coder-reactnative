@@ -1,4 +1,5 @@
 import { uploadPendingActions } from "./uploadPending";
+import { downloadRemoteChanges } from "./downloadRemote";
 
 //para que no hay nunca 2 sync simultaneos
 let syncing = false;
@@ -18,7 +19,11 @@ export async function runSync(uid) {
     try {
         console.log("🚀 SYNC START");
 
+        // ✅ 1 SUBIR
         await uploadPendingActions(uid);
+
+        // ✅ 2 BAJAR
+        await downloadRemoteChanges(uid);
 
         console.log("✅ SYNC END");
 

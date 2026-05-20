@@ -10,7 +10,7 @@ import { store } from './src/store/store';
 import { startSessionListener } from './src/core/session/sessionManager';
 import { useEffect } from 'react';
 
-import { initDatabase } from './src/services/database/database';
+import { initDatabase, initDatabaseSync } from './src/services/database/database';
 
 import { useNetInfo } from '@react-native-community/netinfo';
 import { runSync } from './src/core/sync/syncEngine';
@@ -27,6 +27,7 @@ function AppContent() {
     useEffect(() => {
         const initDataBaseAsync = async () => {
             await initDatabase();
+            await initDatabaseSync();
         };
         // ✅ SQLite
         initDataBaseAsync();

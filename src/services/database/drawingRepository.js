@@ -52,7 +52,7 @@ export const getAllDrawings = async (userId) => {
             [userId]
         );
 
-        console.log("drawings",drawings);
+        //console.log("drawings",drawings);
 
         return drawings;
 
@@ -78,7 +78,7 @@ export const getDrawingById = async (id, userId) => {
 
         const drawing = rows[0];
 
-        console.log("drawing",drawing);
+        //console.log("drawing",drawing);
 
         return drawing;
 
@@ -182,6 +182,7 @@ console.log("actualizado");
         await db.runAsync(
             `UPDATE drawings
             SET status = 'synced',
+                pendingAction = NULL,
                 remoteUrl = ?
             WHERE id = ?`,
             [remoteUrl, id]
@@ -189,7 +190,8 @@ console.log("actualizado");
     }else{
         await db.runAsync(
             `UPDATE drawings
-            SET status = 'synced'
+            SET status = 'synced',
+            pendingAction = NULL
             WHERE id = ?`,
             [id]
         );
@@ -274,7 +276,7 @@ console.log("BD INSERT");
                 createdAt,
                 updatedAt
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'synced', "dataBase", ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'synced', NULL, ?, ?, ?)
         `,[
             drawing.id,
             drawing.userId,

@@ -31,10 +31,10 @@ const ItemDetail = ({ item }) => {
         const data = {
             id : item.id,
             description : "nueva",
-            isArchived : 1,
+            isArchived : 0,
         }
         const resp = await updateDrawing(data, uid);
-        console.log("la respusad", resp);
+        //console.log("la respusad", resp);
         
     }
 
@@ -58,8 +58,23 @@ const ItemDetail = ({ item }) => {
                 <InfoRow label="Estado" value={item.status} />
 
                 <InfoRow
+                    label="Estado pendiente"
+                    value={item.pendingAction}
+                />
+
+                <InfoRow
                     label="Resolución"
                     value={`${item.width} x ${item.height}`}
+                />
+
+                <InfoRow
+                    label="Archivado"
+                    value={item.isArchived}
+                />
+
+                <InfoRow
+                    label="Ultimo error"
+                    value={item.lastError}
                 />
 
                 <InfoRow

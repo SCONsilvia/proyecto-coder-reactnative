@@ -39,7 +39,7 @@ export const initDatabase  = async () => {
                     lastError Text,
 
                     status TEXT NOT NULL,
-                    pendingAction TEXT NOT NULL,
+                    pendingAction TEXT,
 
                     createdAt TEXT NOT NULL,
                     updatedAt TEXT NOT NULL,

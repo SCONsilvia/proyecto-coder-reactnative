@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 // Memoriza el componente y evita renders innecesarios
 //React.memo(Component) No vuelvas a renderizar este componente si sus props no cambiaron.
 const RenderItem = React.memo(({ item }) => {
-    console.log("render item", item);
+    //console.log("render item", item);
     
     const navigation = useNavigation();
 

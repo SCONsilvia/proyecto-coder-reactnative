@@ -30,7 +30,7 @@ export const openCamera = async () => {
 };
 
 export const openGallery = async () => {
-    // 4 pedir permiso
+    // 1 pedir permiso
     const allowed = await requestGalleryPermission();
     if (!allowed) return null;
 

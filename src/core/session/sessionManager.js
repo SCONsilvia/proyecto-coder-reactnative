@@ -8,6 +8,7 @@ export const startSessionListener = (store) => {
     let resolved = false;
 
     //Timeout de seguridad (ej: 5 segundos)
+    // si Firebase no responde en 5s (sin internet en primer boot), forzamos authChecked para no quedar bloqueados en SplashScreen
     const timeout = setTimeout(() => {
         if (!resolved) {
             console.log("⚠️ Firebase no respondió → fallback");
@@ -41,7 +42,7 @@ export const startSessionListener = (store) => {
     //cleanup TOTAL
     return () => {
         clearTimeout(timeout);
-        unsubscribe();//funcion que devuelve onAuthStateChange es un cleapup para limpiar el lsiterne que se crea
+        unsubscribe();//funcion que devuelve onAuthStateChange es un cleanup para limpiar el listener que se crea
     };
 
 };

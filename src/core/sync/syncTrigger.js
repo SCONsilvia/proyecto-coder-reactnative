@@ -19,8 +19,9 @@ export function requestSync() {
 
     syncRequested = true;
 
+    // agrupa múltiples writes seguidos en un solo sync
     setTimeout(() => {
         syncRequested = false;
-        triggerSync?.(); // ✅ usamos la función registrada, lo ponemos con? por si se limpio durante el timeout
+        triggerSync?.(); // usamos la función registrada, lo ponemos con? por si se limpio durante el timeout
     }, 2000);
 }

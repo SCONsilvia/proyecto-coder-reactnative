@@ -37,8 +37,6 @@ const ItemDetail = ({ item }) => {
         }
         const resp = await updateDrawing(data, uid);
         dispatch(drawingChanged());
-        //console.log("la respusad", resp);
-        
     }
 
     return (

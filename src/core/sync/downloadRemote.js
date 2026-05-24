@@ -57,9 +57,6 @@ export const downloadRemoteChanges = async (uid) => {
             remoteDrawing.id
         );
 
-        console.log("mmm",localUri);
-        
-
         await upsertRemoteDrawing({...remoteDrawing, localUri});
 
         if (!newestDate || remoteMs > newestDate) {

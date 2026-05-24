@@ -8,7 +8,6 @@ import {
 import { recoverInterruptedSync } from "../../services/database/drawingRepository";
 
 export const uploadPendingActions = async (userId) => {
-    console.log("trayendo getPeding");
     await recoverInterruptedSync();
 
     const drawings = await getPendingActions(userId);
@@ -16,7 +15,7 @@ export const uploadPendingActions = async (userId) => {
     for (const drawing of drawings) {
 
         try {
-            //marcando como sicronizando
+            //marcando como sincronizando
             await markAsSyncing(drawing.id);
 
             switch (drawing.pendingAction) {
@@ -38,7 +37,7 @@ export const uploadPendingActions = async (userId) => {
                     const blob = await response.blob();
 
                     console.log("subiendo imagen");
-                    //sacamo la extension del archivo 
+                    //sacamos la extension del archivo 
                     const cleanUri = drawing.localUri.split("?")[0];
                     const extension = cleanUri.substring(cleanUri.lastIndexOf(".") + 1);
                     // 2 subir imagen
@@ -56,12 +55,10 @@ export const uploadPendingActions = async (userId) => {
                         remoteUrl
                     });
 
-                    // 4 liberamos el blob
+                    // 4 liberamos la referencia en memoria, en Android el blob no se limpia automáticamente
                     blob.close?.();
 
-                    console.log("subiendo actualizacion de syn a sqlite");
-
-                    console.log("DATA", data);
+                    console.log("subiendo actualizacion de sync a sqlite");
                     // 5 marcar synced local
                     await markAsSynced(drawing.id, data, remoteUrl);
                     break;
@@ -69,8 +66,6 @@ export const uploadPendingActions = async (userId) => {
 
                 case "update": {
                     const data = await updateMetadata(drawing);
-                    console.log("DATA", data);
-                    
                     await markAsSynced(drawing.id, data);
                     break;
                 }

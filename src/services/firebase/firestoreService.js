@@ -1,7 +1,6 @@
 import { doc, setDoc, deleteDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
-//esto deberia de estar en otro sitio
 import { resolveConflict } from "../../core/sync/conflictResolver";
 
 //funcion para limpoar datos
@@ -12,20 +11,20 @@ const sanitizeDrawing = (drawing) => {
         localUri,
         lastError,
         basedOnVersion,
+        updatedAtServer,
         ...firestoreData
     } = drawing;
 
     return {
         ...firestoreData,
 
-        // 🔥 asegurar booleano
+        //asegurar booleano
         isArchived: Boolean(drawing.isArchived),
         
     };
 };
 
 export const createMetadata = async (drawing) => {
-    console.log("CREATE metadata", drawing.id);
     const ref = doc(db, "drawings", drawing.id);
 
     await setDoc(ref,
@@ -39,7 +38,6 @@ export const createMetadata = async (drawing) => {
 };
 
 export const updateMetadata = async (drawing) => {
-    console.log("UPDATE metadata", drawing.id);
 
     const ref = doc(db, "drawings", drawing.id);
 
@@ -52,14 +50,14 @@ export const updateMetadata = async (drawing) => {
 
     const remote = snap.data();
 
-    // 🔥 CHECK VERSION
-    console.log("conflictosssssssssssss", drawing, remote);
-    //Si remote.syncVersion === local.syncVersion - 1 entonces no hay conflictos y se sube el local, pero si es distinto entonces hay un conflico y hay que ver quien tiene el cambio mas reciente
+    //CHECK VERSION
+    console.log("CHECK VERSION", drawing, remote);
+    // Sin conflicto: el remoto tiene la versión que usamos como base al editar
+    // Con conflicto: alguien más modificó el remoto mientras estábamos offline
     if (remote.syncVersion !== drawing.basedOnVersion) {
-        console.log("CONFLICCTOOTOOTOTOTOO");
         const result = await resolveConflict(drawing, remote)
         if (result === "REMOTE_WINS") {
-            return remote; // 🔥 PARAR ACA
+            return remote; //PARAR ACA
         }
         //throw new Error("VERSION_CONFLICT");
 

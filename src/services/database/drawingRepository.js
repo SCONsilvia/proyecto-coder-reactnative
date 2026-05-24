@@ -1,7 +1,7 @@
 import { dbPromise } from "./database";
 
 /*
-INSERTAR SESIÓN
+INSERTAR DRAWING
 */
 
 export const insertDrawing = async (data, uid,) => {
@@ -9,7 +9,6 @@ export const insertDrawing = async (data, uid,) => {
         const db = await dbPromise;
 
         const now = Date.now(); 
-console.log("c", data);
 
         await db.runAsync(
             `INSERT INTO drawings
@@ -54,8 +53,6 @@ export const getAllDrawings = async (userId) => {
             [userId]
         );
 
-        //console.log("drawings",drawings);
-
         return drawings;
 
     } catch (error) {
@@ -80,8 +77,6 @@ export const getDrawingById = async (id, userId) => {
 
         const drawing = rows[0];
 
-        //console.log("drawing",drawing);
-
         return drawing;
 
     } catch (error) {
@@ -99,8 +94,8 @@ export const updateDrawing = async (data, userId) => {
 
         const now = Date.now(); 
 
-        //si nunca se ha creado como tal no cambiamos el pendingAction
-        const resp = await db.runAsync(
+        //si aún no se subió (create pendiente), no lo pisamos con "update" ya que llegaría a Firebase sin imagen
+        await db.runAsync(
             `UPDATE drawings
             SET description = ?,
                 isArchived = ?,
@@ -117,59 +112,13 @@ export const updateDrawing = async (data, userId) => {
                 syncVersion = syncVersion + 1
             WHERE id = ? AND userId = ?`,
             [data.description, data.isArchived, now, data.id, userId]
-        );
-        console.log("archiva",data, resp);
-        
+        );        
 
     } catch (error) {
         console.error(error);
         throw error;
     }
 };
-
-/*
-DELETE
-solo marcamos como borrado para que cuando se sincronice a firebase se borra alla y luego lo borramos aca
-*//*
-export const deleteDrawing = async (id, userId) => {
-    try {
-        const db = await dbPromise;
-
-        await db.runAsync(
-            `UPDATE drawings
-            SET status = "pending",
-            pendingAction = "delete"
-            WHERE id = ? AND userId = ?`,
-            [id, userId]
-        );
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};*/
-
-/*
-DELETE ALL
-*//*
-export const deleteAllDrawing = async (userId) => {
-    try {
-        const db = await dbPromise;
-
-        await db.withTransactionAsync(async () => {
-            await db.runAsync(`
-                DELETE FROM drawings WHERE userId = ?
-            `,[userId]);
-
-        });
-
-        console.log("dibujos eliminado");
-
-    } catch (error) {
-        console.error("Error eliminandos", error);
-        throw error;
-    }
-};*/
 
 export const getPendingActions = async (userId) => {
     const db = await dbPromise;
@@ -184,8 +133,6 @@ export const getPendingActions = async (userId) => {
 };
 
 export const markAsSynced = async (id, data, remoteUrl) => {
-console.log("actualizado");
-
     const db = await dbPromise;
     const updatedAtServerMs = data.updatedAtServer?.toMillis?.() ?? null;
 
@@ -211,12 +158,9 @@ console.log("actualizado");
             [data.syncVersion, updatedAtServerMs, id]
         );
     }
-    console.log("actualizando completa remoteurl:", remoteUrl);
 };
 
 export const markAsFailed = async (id, error) => {
-    console.log("marcando como failed", id);
-
     const db = await dbPromise;
 
     const now = Date.now(); 
@@ -271,20 +215,14 @@ export const recoverInterruptedSync = async () => {
 };
 
 export const upsertRemoteDrawing = async (drawing) => {
-
-    console.log("BD EMPECEMOS", drawing);
-    
     const db = await dbPromise;
 
-    console.log("BD ROWS");
     const rows = await db.getAllAsync(
         `SELECT id FROM drawings WHERE id = ?`,
         [drawing.id]
     );
 
-    console.log("BD ROWS2", rows);
     if (rows.length === 0) {
-console.log("BD INSERT");
         // INSERT REMOTO
         await db.runAsync(`
             INSERT INTO drawings (
@@ -320,9 +258,7 @@ console.log("BD INSERT");
             drawing.updatedAtClient,
             drawing.updatedAtServer?.toMillis()
         ]);
-console.log("BD FIN INSERT");
     } else {
-console.log("BD UPDATE");
         // UPDATE REMOTO
         await db.runAsync(`
             UPDATE drawings
@@ -349,7 +285,6 @@ console.log("BD UPDATE");
             drawing.updatedAtServer?.toMillis(),
             drawing.id
         ]);
-        console.log("BD FIN UPDATE");
     }
 };
 

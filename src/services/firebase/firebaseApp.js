@@ -18,16 +18,16 @@ const firebaseConfig = {
     appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-// 🔥 APP (singleton)
+//APP (singleton)
 export const app = initializeApp(firebaseConfig);
 
-// 🔥 AUTH
+//AUTH
 export const auth = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage),
 });
 
-// 🔥 FIRESTORE
+//FIRESTORE
 export const db = getFirestore(app);
 
-// 🔥 STORAGE
+//STORAGE
 export const storage = getStorage(app);

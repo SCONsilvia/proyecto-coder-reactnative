@@ -22,8 +22,6 @@ export default function Camera() {
             }
 
             const result = await createDrawingWithImage(data, asset, uid);
-
-            console.log("la repsuesta", result);
             
             setPhoto(result.savedUri);
             

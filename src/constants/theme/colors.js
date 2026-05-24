@@ -1,7 +1,7 @@
 export const colors = {
     primary: "#4F46E5",        // color principal (botones, active)
     secondary: "#9333EA",
-    text: "#1112827",
+    text: "#112827",
     muted: "#6B7280",
 
     background: "#FFFFFF",     // fondo general app

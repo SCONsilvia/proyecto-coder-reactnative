@@ -40,10 +40,7 @@ export const saveImage = async (uri, userId, id) => {
             from: uri,
             to: newPath,
         });
-
-        console.log("antesJAJAJAJAJ", newPath);
         
-
         return newPath;
     } catch (error) {
         console.error("Error guardando imagen", error);

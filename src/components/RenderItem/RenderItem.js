@@ -50,27 +50,3 @@ const styles = StyleSheet.create({
     },
 });
 
-/*
-🟡 Nivel 3 (PRO)
-
-Tap en imagen →
-
-👉 abre pantalla detalle.
-
-🟡 Nivel 4 (🔥 APP SERIA)
-
-Long press:
-
-borrar
-editar
-favorito
-🔵 Nivel 5 (WOW)
-
-Header arriba:
-
-Drawing Diary
-You drew 48 times this month ✨
-
-Esto crea apego emocional.
-
-*/

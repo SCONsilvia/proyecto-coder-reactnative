@@ -48,9 +48,8 @@ function AppContent() {
 
     // ✅ Sync listener separado
     useEffect(() => {
-        //si no hay usuaio logueado no hacemos nada
+        //si no hay usuario logueado no hacemos nada
         if (!uid) return;
-console.log("conentando");
 
         const onDownload = () => dispatch(drawingChanged()); //para avisar de cambios
         const run = () => runSync(uid, onDownload);
@@ -73,7 +72,6 @@ console.log("conentando");
 
             wasOnline = isOnline; //actualiza para la próxima vez
         });
-console.log("conexion lista");
         //eliminamos el listener
         return () => {
             clearSyncTrigger();  // limpiamos el trigger

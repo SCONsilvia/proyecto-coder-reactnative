@@ -1,0 +1,252 @@
+[
+    {
+        "id": "challenge_001",
+        "title": "Dibuja una espada antigua",
+        "date": "2026-05-24"
+    },
+    {
+        "id": "challenge_002",
+        "title": "Dibuja un gato dormido",
+        "date": "2026-05-25"
+    },
+    {
+        "id": "challenge_003",
+        "title": "Dibuja una ciudad futurista",
+        "date": "2026-05-26"
+    },
+    {
+        "id": "challenge_004",
+        "title": "Dibuja una taza rota",
+        "date": "2026-05-27"
+    },
+    {
+        "id": "challenge_005",
+        "title": "Dibuja un dragón pequeño",
+        "date": "2026-05-28"
+    },
+    {
+        "id": "challenge_006",
+        "title": "Dibuja una bicicleta vieja",
+        "date": "2026-05-29"
+    },
+    {
+        "id": "challenge_007",
+        "title": "Dibuja una mano sosteniendo algo",
+        "date": "2026-05-30"
+    },
+    {
+        "id": "challenge_008",
+        "title": "Dibuja una casa embrujada",
+        "date": "2026-05-31"
+    },
+    {
+        "id": "challenge_009",
+        "title": "Dibuja un bosque mágico",
+        "date": "2026-06-01"
+    },
+    {
+        "id": "challenge_010",
+        "title": "Dibuja un robot amigable",
+        "date": "2026-06-02"
+    },
+    {
+        "id": "challenge_011",
+        "title": "Dibuja una llave misteriosa",
+        "date": "2026-06-03"
+    },
+    {
+        "id": "challenge_012",
+        "title": "Dibuja una montaña nevada",
+        "date": "2026-06-04"
+    },
+    {
+        "id": "challenge_013",
+        "title": "Dibuja un pez gigante",
+        "date": "2026-06-05"
+    },
+    {
+        "id": "challenge_014",
+        "title": "Dibuja un castillo flotante",
+        "date": "2026-06-06"
+    },
+    {
+        "id": "challenge_015",
+        "title": "Dibuja una mochila aventurera",
+        "date": "2026-06-07"
+    },
+    {
+        "id": "challenge_016",
+        "title": "Dibuja una cafetería tranquila",
+        "date": "2026-06-08"
+    },
+    {
+        "id": "challenge_017",
+        "title": "Dibuja un monstruo tierno",
+        "date": "2026-06-09"
+    },
+    {
+        "id": "challenge_018",
+        "title": "Dibuja un personaje con capa",
+        "date": "2026-06-10"
+    },
+    {
+        "id": "challenge_019",
+        "title": "Dibuja una tormenta",
+        "date": "2026-06-11"
+    },
+    {
+        "id": "challenge_020",
+        "title": "Dibuja un cofre del tesoro",
+        "date": "2026-06-12"
+    },
+    {
+        "id": "challenge_021",
+        "title": "Dibuja un planeta alienígena",
+        "date": "2026-06-13"
+    },
+    {
+        "id": "challenge_022",
+        "title": "Dibuja una espada futurista",
+        "date": "2026-06-14"
+    },
+    {
+        "id": "challenge_023",
+        "title": "Dibuja un perro mojado",
+        "date": "2026-06-15"
+    },
+    {
+        "id": "challenge_024",
+        "title": "Dibuja un puente colgante",
+        "date": "2026-06-16"
+    },
+    {
+        "id": "challenge_025",
+        "title": "Dibuja un tren antiguo",
+        "date": "2026-06-17"
+    },
+    {
+        "id": "challenge_026",
+        "title": "Dibuja una habitación desordenada",
+        "date": "2026-06-18"
+    },
+    {
+        "id": "challenge_027",
+        "title": "Dibuja un guerrero cansado",
+        "date": "2026-06-19"
+    },
+    {
+        "id": "challenge_028",
+        "title": "Dibuja una flor gigante",
+        "date": "2026-06-20"
+    },
+    {
+        "id": "challenge_029",
+        "title": "Dibuja una espada rota",
+        "date": "2026-06-21"
+    },
+    {
+        "id": "challenge_030",
+        "title": "Dibuja una estación espacial",
+        "date": "2026-06-22"
+    },
+    {
+        "id": "challenge_031",
+        "title": "Dibuja un samurái",
+        "date": "2026-06-23"
+    },
+    {
+        "id": "challenge_032",
+        "title": "Dibuja una criatura marina",
+        "date": "2026-06-24"
+    },
+    {
+        "id": "challenge_033",
+        "title": "Dibuja un árbol anciano",
+        "date": "2026-06-25"
+    },
+    {
+        "id": "challenge_034",
+        "title": "Dibuja una máscara misteriosa",
+        "date": "2026-06-26"
+    },
+    {
+        "id": "challenge_035",
+        "title": "Dibuja una espada de hielo",
+        "date": "2026-06-27"
+    },
+    {
+        "id": "challenge_036",
+        "title": "Dibuja un mago leyendo",
+        "date": "2026-06-28"
+    },
+    {
+        "id": "challenge_037",
+        "title": "Dibuja una calle lluviosa",
+        "date": "2026-06-29"
+    },
+    {
+        "id": "challenge_038",
+        "title": "Dibuja un zorro",
+        "date": "2026-06-30"
+    },
+    {
+        "id": "challenge_039",
+        "title": "Dibuja un barco pirata",
+        "date": "2026-07-01"
+    },
+    {
+        "id": "challenge_040",
+        "title": "Dibuja una espada ceremonial",
+        "date": "2026-07-02"
+    },
+    {
+        "id": "challenge_041",
+        "title": "Dibuja un dragón volando",
+        "date": "2026-07-03"
+    },
+    {
+        "id": "challenge_042",
+        "title": "Dibuja un pueblo medieval",
+        "date": "2026-07-04"
+    },
+    {
+        "id": "challenge_043",
+        "title": "Dibuja una cueva brillante",
+        "date": "2026-07-05"
+    },
+    {
+        "id": "challenge_044",
+        "title": "Dibuja un astronauta perdido",
+        "date": "2026-07-06"
+    },
+    {
+        "id": "challenge_045",
+        "title": "Dibuja una poción mágica",
+        "date": "2026-07-07"
+    },
+    {
+        "id": "challenge_046",
+        "title": "Dibuja un pájaro mecánico",
+        "date": "2026-07-08"
+    },
+    {
+        "id": "challenge_047",
+        "title": "Dibuja un castillo abandonado",
+        "date": "2026-07-09"
+    },
+    {
+        "id": "challenge_048",
+        "title": "Dibuja una espada oxidada",
+        "date": "2026-07-10"
+    },
+    {
+        "id": "challenge_049",
+        "title": "Dibuja una escena bajo el agua",
+        "date": "2026-07-11"
+    },
+    {
+        "id": "challenge_050",
+        "title": "Dibuja una motocicleta",
+        "date": "2026-07-12"
+    }
+]

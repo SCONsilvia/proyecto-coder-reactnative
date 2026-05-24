@@ -12,7 +12,6 @@ status:
     syncing
     failed
     synced
-    deleted
 */
 export const initDatabase  = async () => {
     try {
@@ -41,9 +40,14 @@ export const initDatabase  = async () => {
                     status TEXT NOT NULL,
                     pendingAction TEXT,
 
-                    createdAt TEXT NOT NULL,
-                    updatedAt TEXT NOT NULL,
-                    deleteAt TEXT DEFAULT NULL
+                    basedOnVersion INTEGER DEFAULT 0,
+
+                    createdAt INTEGER NOT NULL,
+
+                    updatedAtClient INTEGER NOT NULL,
+                    updatedAtServer INTEGER,
+                    
+                    deleteAt INTEGER DEFAULT NULL
                 );
             `);
 
@@ -77,7 +81,7 @@ export const initDatabaseSync  = async () => {
             await db.execAsync(`
                 CREATE TABLE IF NOT EXISTS sync_metadata (
                     key TEXT PRIMARY KEY,
-                    value TEXT
+                    value INTEGER
                 );
             `);
 

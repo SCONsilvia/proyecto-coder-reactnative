@@ -126,7 +126,7 @@ export const updateDrawing = async (data, userId) => {
 
 /*
 ELIMINAR (soft delete offline-first)
-*/
+*//*
 export const deleteDrawing = async (id, userId) => {
     try {
         await drawingRepository.deleteDrawing(id, userId);
@@ -140,10 +140,10 @@ export const deleteDrawing = async (id, userId) => {
     }
 };
 
-
+*/
 /*
 BORRAR TODO DEL USER
-*/
+*//*
 export const deleteAllUserDrawings = async (userId) => {
     try {
         await drawingRepository.deleteAllDrawing(userId);
@@ -153,7 +153,7 @@ export const deleteAllUserDrawings = async (userId) => {
         throw error;
     }
 };
-
+*/
 
 /*
 OBTENER PENDIENTES PARA SYNC

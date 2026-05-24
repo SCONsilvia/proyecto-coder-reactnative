@@ -8,7 +8,7 @@ import {
 
 import { db } from "../../services/firebase/firebaseApp";
 import { getMetadata, setMetadata } from "../../services/database/syncRepository";
-import { upsertRemoteDrawing } from "../../services/database/drawingRepository";
+import { upsertRemoteDrawing, getDrawingById } from "../../services/database/drawingRepository";
 
 import { downloadImage } from "../../services/firebase/downloadImage";
 
@@ -24,7 +24,7 @@ export const downloadRemoteChanges = async (uid) => {
         q = query(
             collection(db, "drawings"),
             where("userId", "==", uid),
-            where("updatedAtServer", ">", Timestamp.fromMillis(Number(lastSyncAt)))
+            where("updatedAtServer", ">", Timestamp.fromMillis(lastSyncAt))
         );
     } else {
         // primer login
@@ -42,6 +42,15 @@ export const downloadRemoteChanges = async (uid) => {
 
         const remoteDrawing = docSnap.data();
 
+        //buscamos en sqllite el mismo archivo para ver si existe, si existe comprarmos las fechas
+        const localDrawing = await getDrawingById(remoteDrawing.id, remoteDrawing.userId);
+        //Si ya estaba sincronizados no hacemos nada
+        ///trnaformamos los datos (convierte a milisegundos, que es serializable):
+        const remoteMs = remoteDrawing.updatedAtServer?.toMillis?.() ?? 0;
+        if (localDrawing && remoteMs === localDrawing.updatedAtServer) {
+            continue;
+        }
+
         const localUri = await downloadImage(
             remoteDrawing.remoteUrl,
             uid,
@@ -53,14 +62,8 @@ export const downloadRemoteChanges = async (uid) => {
 
         await upsertRemoteDrawing({...remoteDrawing, localUri});
 
-        //trnaformamos los datos (convierte a milisegundos, que es serializable):
-        const candidateDate = remoteDrawing.updatedAtServer?.toMillis?.() ?? 0;
-
-        if (
-            !newestDate ||
-            candidateDate > newestDate
-        ) {
-            newestDate = candidateDate;
+        if (!newestDate || remoteMs > newestDate) {
+            newestDate = remoteMs;
         }
     }
 

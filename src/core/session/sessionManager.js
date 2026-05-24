@@ -7,7 +7,7 @@ export const startSessionListener = (store) => {
 
     let resolved = false;
 
-    // 🧠 Timeout de seguridad (ej: 5 segundos)
+    //Timeout de seguridad (ej: 5 segundos)
     const timeout = setTimeout(() => {
         if (!resolved) {
             console.log("⚠️ Firebase no respondió → fallback");

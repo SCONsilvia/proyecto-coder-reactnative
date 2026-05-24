@@ -11,6 +11,7 @@ const sanitizeDrawing = (drawing) => {
         pendingAction,
         localUri,
         lastError,
+        basedOnVersion,
         ...firestoreData
     } = drawing;
 
@@ -25,11 +26,16 @@ const sanitizeDrawing = (drawing) => {
 
 export const createMetadata = async (drawing) => {
     console.log("CREATE metadata", drawing.id);
+    const ref = doc(db, "drawings", drawing.id);
 
-    await setDoc(
-        doc(db, "drawings", drawing.id),
+    await setDoc(ref,
         { ...sanitizeDrawing(drawing), updatedAtServer: serverTimestamp()}
     );
+
+    // Volvemos a leer el dato para ver que fecha guardo
+   const updatedSnap = await getDoc(ref);
+
+   return updatedSnap.data();
 };
 
 export const updateMetadata = async (drawing) => {
@@ -49,11 +55,11 @@ export const updateMetadata = async (drawing) => {
     // 🔥 CHECK VERSION
     console.log("conflictosssssssssssss", drawing, remote);
     //Si remote.syncVersion === local.syncVersion - 1 entonces no hay conflictos y se sube el local, pero si es distinto entonces hay un conflico y hay que ver quien tiene el cambio mas reciente
-    if (remote.syncVersion !== drawing.syncVersion - 1) {
+    if (remote.syncVersion !== drawing.basedOnVersion) {
         console.log("CONFLICCTOOTOOTOTOTOO");
         const result = await resolveConflict(drawing, remote)
         if (result === "REMOTE_WINS") {
-            return; // 🔥 PARAR ACA
+            return remote; // 🔥 PARAR ACA
         }
         //throw new Error("VERSION_CONFLICT");
 
@@ -68,14 +74,11 @@ export const updateMetadata = async (drawing) => {
         updatedAtServer: serverTimestamp(),
     }, { merge: true });//evita sobrescribir todo
 
+    // Volvemos a leer el dato para ver que fecha guardo
+   const updatedSnap = await getDoc(ref);
 
+   return updatedSnap.data();
 };
 
-export const deleteMetadata = async (drawingId) => {
-    console.log("DELETE drawing", drawingId);
 
-    await deleteDoc(
-        doc(db, "drawings", drawingId)
-    );
-};
 

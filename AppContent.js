@@ -27,18 +27,21 @@ function AppContent() {
     const uid = useSelector(state => state.user.uid);
 
     useEffect(() => {
+        let stopSession = null;
+
         const initDataBaseAsync = async () => {
             await initDatabase();
             await initDatabaseSync();
+
+            //Firebase Auth listener
+            stopSession = startSessionListener(store);
         };
-        // ✅ SQLite
+        // SQLite
         initDataBaseAsync();
 
-        // ✅ Firebase Auth listener
-        const stopSessionListener = startSessionListener(store);
 
         return () => {
-            stopSessionListener();
+            stopSession?.();
         };
 
     }, []);
@@ -57,11 +60,18 @@ console.log("conentando");
 
         registerSyncTrigger(run);
 
+        //variable que nos ayudara a saber cuando se pasa de sin internet a con internet
+        let wasOnline = false; 
+
         //Cuando el usuario exista y vuelva el internet, sincronizá los datos.
         const unsubscribe = NetInfo.addEventListener(state => {
-        if (state.isConnected && state.isInternetReachable) {
-            run();
-        }
+            const isOnline = !!(state.isConnected && state.isInternetReachable);
+
+            if (isOnline && !wasOnline) { //solo al RECONECTAR
+                run();
+            }
+
+            wasOnline = isOnline; //actualiza para la próxima vez
         });
 console.log("conexion lista");
         //eliminamos el listener

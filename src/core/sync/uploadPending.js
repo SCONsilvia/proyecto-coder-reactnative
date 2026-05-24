@@ -3,8 +3,7 @@ import { markAsSyncing, markAsFailed, markAsSynced } from "../../services/databa
 import { uploadImage } from "../../services/firebase/storageService";
 import {
     createMetadata,
-    updateMetadata,
-    deleteMetadata
+    updateMetadata
 } from "../../services/firebase/firestoreService";
 import { recoverInterruptedSync } from "../../services/database/drawingRepository";
 
@@ -52,7 +51,7 @@ export const uploadPendingActions = async (userId) => {
 
                     console.log("subiendo metadata");
                     // 3 subir metadata
-                    await createMetadata({
+                    const data = await createMetadata({
                         ...drawing,
                         remoteUrl
                     });
@@ -61,20 +60,18 @@ export const uploadPendingActions = async (userId) => {
                     blob.close?.();
 
                     console.log("subiendo actualizacion de syn a sqlite");
+
+                    console.log("DATA", data);
                     // 5 marcar synced local
-                    await markAsSynced(drawing.id, remoteUrl);
+                    await markAsSynced(drawing.id, data, remoteUrl);
                     break;
                 }
 
                 case "update": {
-                    await updateMetadata(drawing);
-                    await markAsSynced(drawing.id);
-                    break;
-                }
-
-                case "delete": {
-                    await deleteMetadata(drawing.id);
-                    await markAsSynced(drawing.id);
+                    const data = await updateMetadata(drawing);
+                    console.log("DATA", data);
+                    
+                    await markAsSynced(drawing.id, data);
                     break;
                 }
 

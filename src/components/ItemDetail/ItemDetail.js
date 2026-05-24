@@ -87,7 +87,7 @@ const ItemDetail = ({ item }) => {
 
                 <InfoRow
                     label="Actualizado"
-                    value={formatDate(item.updatedAt)}
+                    value={formatDate(item.updatedAtClient)}
                 />
 
                 <InfoRow

@@ -16,7 +16,7 @@ export const setMetadata = async (key, value) => {
 
     await db.runAsync(
         `INSERT OR REPLACE INTO sync_metadata (key,value)
-         VALUES (?,?)`,
+        VALUES (?,?)`,
         [key, value]
     );
 };

@@ -8,13 +8,13 @@ export const insertDrawing = async (data, uid,) => {
     try {
         const db = await dbPromise;
 
-        const now = new Date().toISOString();
+        const now = Date.now(); 
 console.log("c", data);
 
         await db.runAsync(
             `INSERT INTO drawings
-            (id, userId, localUri, remoteUrl, width, height, description, status, pendingAction, syncVersion, lastError, createdAt, updatedAt)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            (id, userId, localUri, remoteUrl, width, height, description, status, pendingAction, syncVersion, basedOnVersion, lastError, createdAt, updatedAtClient, updatedAtServer)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 data.id,
                 uid,
@@ -26,9 +26,11 @@ console.log("c", data);
                 "pending",
                 "create",
                 0,
+                0,
                 null,
                 now,
                 now,
+                null,
             ]
         );
 
@@ -95,14 +97,14 @@ export const updateDrawing = async (data, userId) => {
     try {
         const db = await dbPromise;
 
-        const now = new Date().toISOString();
+        const now = Date.now(); 
 
         //si nunca se ha creado como tal no cambiamos el pendingAction
         const resp = await db.runAsync(
             `UPDATE drawings
             SET description = ?,
                 isArchived = ?,
-                updatedAt = ?,
+                updatedAtClient = ?,
                 status = "pending",
 
                 pendingAction =
@@ -128,7 +130,7 @@ export const updateDrawing = async (data, userId) => {
 /*
 DELETE
 solo marcamos como borrado para que cuando se sincronice a firebase se borra alla y luego lo borramos aca
-*/
+*//*
 export const deleteDrawing = async (id, userId) => {
     try {
         const db = await dbPromise;
@@ -145,11 +147,11 @@ export const deleteDrawing = async (id, userId) => {
         console.error(error);
         throw error;
     }
-};
+};*/
 
 /*
 DELETE ALL
-*/
+*//*
 export const deleteAllDrawing = async (userId) => {
     try {
         const db = await dbPromise;
@@ -167,7 +169,7 @@ export const deleteAllDrawing = async (userId) => {
         console.error("Error eliminandos", error);
         throw error;
     }
-};
+};*/
 
 export const getPendingActions = async (userId) => {
     const db = await dbPromise;
@@ -176,32 +178,37 @@ export const getPendingActions = async (userId) => {
         `SELECT * FROM drawings
         WHERE userId = ?
         AND status IN ("pending", "failed") 
-        ORDER BY updatedAt ASC`,
+        ORDER BY updatedAtClient ASC`,
         [userId]
     );
 };
 
-export const markAsSynced = async (id, remoteUrl) => {
+export const markAsSynced = async (id, data, remoteUrl) => {
 console.log("actualizado");
 
     const db = await dbPromise;
+    const updatedAtServerMs = data.updatedAtServer?.toMillis?.() ?? null;
 
     if(remoteUrl){
         await db.runAsync(
             `UPDATE drawings
             SET status = 'synced',
                 pendingAction = NULL,
+                basedOnVersion = ?,
+                updatedAtServer = ?,
                 remoteUrl = ?
             WHERE id = ?`,
-            [remoteUrl, id]
+            [data.syncVersion, updatedAtServerMs, remoteUrl, id]
         );
     }else{
         await db.runAsync(
             `UPDATE drawings
             SET status = 'synced',
-            pendingAction = NULL
+            pendingAction = NULL,
+            basedOnVersion = ?,
+            updatedAtServer = ?
             WHERE id = ?`,
-            [id]
+            [data.syncVersion, updatedAtServerMs, id]
         );
     }
     console.log("actualizando completa remoteurl:", remoteUrl);
@@ -212,12 +219,12 @@ export const markAsFailed = async (id, error) => {
 
     const db = await dbPromise;
 
-    const now = new Date().toISOString();
+    const now = Date.now(); 
 
     await db.runAsync(
         `UPDATE drawings
         SET status = 'failed',
-            updatedAt = ?,
+            updatedAtClient = ?,
             lastError = ?
         WHERE id = ?`,
         [
@@ -292,10 +299,12 @@ console.log("BD INSERT");
                 status,
                 pendingAction,
                 syncVersion,
+                basedOnVersion,
                 createdAt,
-                updatedAt
+                updatedAtClient,
+                updatedAtServer
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'synced', NULL, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'synced', NULL, ?, ?, ?, ?, ?)
         `,[
             drawing.id,
             drawing.userId,
@@ -306,8 +315,10 @@ console.log("BD INSERT");
             drawing.description,
             drawing.isArchived ? 1 : 0,
             drawing.syncVersion ?? 0,
+            drawing.syncVersion ?? 0,
             drawing.createdAt,
-            drawing.updatedAt
+            drawing.updatedAtClient,
+            drawing.updatedAtServer?.toMillis()
         ]);
 console.log("BD FIN INSERT");
     } else {
@@ -316,24 +327,26 @@ console.log("BD UPDATE");
         await db.runAsync(`
             UPDATE drawings
             SET
-                localUri = ?,
                 remoteUrl = ?,
                 description = ?,
                 isArchived = ?,
                 syncVersion = ?,
-                updatedAt = ?,
+                updatedAtClient = ?,
                 status = ?,
-                pendingAction = ?
+                pendingAction = ?,
+                basedOnVersion = ?,
+                updatedAtServer = ?
             WHERE id = ?
         `,[
-            drawing.localUri,
             drawing.remoteUrl,
             drawing.description,
             drawing.isArchived ? 1 : 0,
             drawing.syncVersion ?? 0,
-            drawing.updatedAt,
+            drawing.updatedAtClient,
             "synced",
             null,
+            drawing.syncVersion ?? 0,
+            drawing.updatedAtServer?.toMillis(),
             drawing.id
         ]);
         console.log("BD FIN UPDATE");

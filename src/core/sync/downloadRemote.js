@@ -2,7 +2,8 @@ import {
     collection,
     query,
     where,
-    getDocs
+    getDocs,
+    Timestamp
 } from "firebase/firestore";
 
 import { db } from "../../services/firebase/firebaseApp";
@@ -23,7 +24,7 @@ export const downloadRemoteChanges = async (uid) => {
         q = query(
             collection(db, "drawings"),
             where("userId", "==", uid),
-            where("updatedAt", ">", lastSyncAt)
+            where("updatedAtServer", ">", Timestamp.fromMillis(Number(lastSyncAt)))
         );
     } else {
         // primer login
@@ -52,11 +53,14 @@ export const downloadRemoteChanges = async (uid) => {
 
         await upsertRemoteDrawing({...remoteDrawing, localUri});
 
+        //trnaformamos los datos (convierte a milisegundos, que es serializable):
+        const candidateDate = remoteDrawing.updatedAtServer?.toMillis?.() ?? 0;
+
         if (
             !newestDate ||
-            remoteDrawing.updatedAtServer > newestDate
+            candidateDate > newestDate
         ) {
-            newestDate = remoteDrawing.updatedAtServer;
+            newestDate = candidateDate;
         }
     }
 

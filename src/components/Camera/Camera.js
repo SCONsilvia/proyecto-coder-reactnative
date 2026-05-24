@@ -2,9 +2,11 @@ import { View, Button, Image } from "react-native";
 import { useState } from "react";
 import { openCamera } from "../../services/media/mediaSevirce";
 import { createDrawingWithImage } from "../../services/database/drawingService";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { drawingChanged } from "../../features/drawings/drawingsSlice";
 
 export default function Camera() {
+    const dispatch = useDispatch();
 
     const [photo, setPhoto] = useState(null);
     const uid = useSelector(state => state.user.uid);
@@ -25,6 +27,7 @@ export default function Camera() {
             
             setPhoto(result.savedUri);
             
+            dispatch(drawingChanged());
         }catch(err){
             console.log("error",err);
         }

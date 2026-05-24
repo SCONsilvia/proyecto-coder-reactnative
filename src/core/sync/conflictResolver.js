@@ -1,4 +1,4 @@
-import { upsertRemoteDrawing, markPendingUpdate } from "../../services/database/drawingRepository";
+import { upsertRemoteDrawing, markPendingUpdate, markAsSynced } from "../../services/database/drawingRepository";
 import { requestSync } from "./syncTrigger";
 
 export const resolveConflict = async (localDrawing, remote) => {
@@ -9,8 +9,8 @@ export const resolveConflict = async (localDrawing, remote) => {
     
     // estrategia simple profesional:
     // LAST EDIT WINS usando updatedAt
-
-    if (localDrawing.updatedAt > remote.updatedAtServer) {
+    const remoteMs = remote.updatedAtServer?.toMillis?.() ?? 0;
+    if (new Date(localDrawing.updatedAt).getTime() > remoteMs) {
 
         console.log("LOCAL WINS");
         //si gana local ponemos status en pending y  pendingAction en update para que se suba cuando hagamos requesSync
@@ -33,8 +33,8 @@ export const resolveConflict = async (localDrawing, remote) => {
         // pisamos local
         await upsertRemoteDrawing(remote);
 
-        //  marcamos synced para evitar loop
-        await markAsSynced(remote.id);
+        //  marcamos synced para evitar loop, ya lo hacemos con la funcion de arriba
+        //await markAsSynced(remote.id);
 
         return "REMOTE_WINS";
     }

@@ -9,7 +9,8 @@ import {
 
 import {
     resendVerificationEmail,
-    checkEmailVerification
+    checkEmailVerification,
+    logoutUser
 } from "../features/auth/authThunks";
 
 import { auth } from "../services/firebase/firebaseApp";

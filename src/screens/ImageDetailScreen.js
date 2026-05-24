@@ -1,6 +1,6 @@
 import MainLayout from "../layouts/MainLayout";
 import ItemDetail from "../components/ItemDetail/ItemDetail";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
 import { useDrawing } from "../hooks/useDrawing";
 
 const ImageDetailScreen = ({ route }) => {

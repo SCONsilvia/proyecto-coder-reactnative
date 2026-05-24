@@ -48,6 +48,7 @@ export const updateMetadata = async (drawing) => {
 
     // 🔥 CHECK VERSION
     console.log("conflictosssssssssssss", drawing, remote);
+    //Si remote.syncVersion === local.syncVersion - 1 entonces no hay conflictos y se sube el local, pero si es distinto entonces hay un conflico y hay que ver quien tiene el cambio mas reciente
     if (remote.syncVersion !== drawing.syncVersion - 1) {
         console.log("CONFLICCTOOTOOTOTOTOO");
         const result = await resolveConflict(drawing, remote)

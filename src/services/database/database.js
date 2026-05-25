@@ -93,3 +93,31 @@ export const initDatabaseSync  = async () => {
     }
 };
 
+export const initDatabaseChallenges  = async () => {
+    try {
+        const db = await dbPromise;
+
+        await db.withTransactionAsync(async () => {
+
+            await db.execAsync(`
+                CREATE TABLE IF NOT EXISTS challenges (
+                    id TEXT PRIMARY KEY,
+                    title TEXT,
+                    date TEXT
+                );
+            `);
+
+            await db.execAsync(`
+                CREATE INDEX IF NOT EXISTS idx_challenges_date
+                ON challenges(date);
+            `);
+
+        });
+        
+
+        console.log("Tabla chagenger creada correctamente");
+    } catch (error) {
+        console.error("Error creando tabla", error);
+    }
+};
+

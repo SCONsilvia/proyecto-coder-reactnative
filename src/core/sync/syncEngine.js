@@ -1,5 +1,6 @@
 import { uploadPendingActions } from "./uploadPending";
 import { downloadRemoteChanges } from "./downloadRemote";
+import { syncChallengesIfNeeded } from "./syncChallengesIfNeeded";
 
 //para que no hay nunca 2 sync simultaneos
 let syncing = false;
@@ -38,6 +39,9 @@ export async function runSync(uid, onDownloadComplete) {
 
         // ✅ 2 BAJAR
         await downloadRemoteChanges(uid);
+
+        // 3 verificar challenger y bajarlos de ser necesario
+        await syncChallengesIfNeeded();
 
         onDownloadComplete?.(); //si fue pasado lo llamamos
 

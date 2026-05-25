@@ -10,7 +10,7 @@ import { store } from './src/store/store';
 import { startSessionListener } from './src/core/session/sessionManager';
 import { useEffect } from 'react';
 
-import { initDatabase, initDatabaseSync } from './src/services/database/database';
+import { initDatabase, initDatabaseSync, initDatabaseChallenges } from './src/services/database/database';
 
 import { runSync } from './src/core/sync/syncEngine';
 
@@ -32,6 +32,7 @@ function AppContent() {
         const initDataBaseAsync = async () => {
             await initDatabase();
             await initDatabaseSync();
+            await initDatabaseChallenges();
 
             //Firebase Auth listener
             stopSession = startSessionListener(store);

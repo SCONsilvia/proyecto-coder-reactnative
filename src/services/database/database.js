@@ -30,7 +30,10 @@ export const initDatabase  = async () => {
                     width INTEGER,
                     height INTEGER,
 
-                    description TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    description TEXT,
+
+                    challengeId TEXT,
 
                     isArchived INTEGER DEFAULT 0,
 
@@ -52,16 +55,28 @@ export const initDatabase  = async () => {
             `);
 
             //ayuda a que SQLite escanee toda la tabla
-            // búsquedas por usuario
+            // búsquedas por si esta archivado o no
             await db.execAsync(`
                 CREATE INDEX IF NOT EXISTS idx_drawings_gallery
                 ON drawings(userId, isArchived);
+            `);
+
+            // búsquedas por challenge
+            await db.execAsync(`
+                CREATE INDEX IF NOT EXISTS idx_drawings_challenge
+                ON drawings(userId, challengeId);
             `);
 
             // búsquedas de sincronización
             await db.execAsync(`
                 CREATE INDEX IF NOT EXISTS idx_drawings_sync
                 ON drawings(userId, status);
+            `);
+
+            // búsquedas de galleria por creacion
+            await db.execAsync(`
+                CREATE INDEX IF NOT EXISTS idx_drawings_created
+                ON drawings(userId, createdAt DESC);
             `);
 
         });

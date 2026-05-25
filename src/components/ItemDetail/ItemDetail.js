@@ -32,6 +32,7 @@ const ItemDetail = ({ item }) => {
     const archiva = async () => {
         const data = {
             id : item.id,
+            title: "alaaa",
             description : "nueva",
             isArchived : 0,
         }
@@ -53,6 +54,10 @@ const ItemDetail = ({ item }) => {
             <View style={styles.infoContainer}>
 
                 <Text style={styles.description}>
+                    {item.title}
+                </Text>
+
+                <Text style={styles.description}>
                     {item.description}
                 </Text>
 
@@ -66,6 +71,11 @@ const ItemDetail = ({ item }) => {
                 <InfoRow
                     label="Resolución"
                     value={`${item.width} x ${item.height}`}
+                />
+
+                <InfoRow
+                    label="Es reto?"
+                    value={item.challengeId}
                 />
 
                 <InfoRow

@@ -26,7 +26,9 @@ export const createDrawingWithImage = async (data, asset, uid) => {
             localUri: savedUri,
             width: asset.width,
             height: asset.height,
+            title: data.title,
             description: data.description,
+            challengeId: data.challengeId,
         }, uid);
 
         requestSync();

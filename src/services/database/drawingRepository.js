@@ -12,8 +12,8 @@ export const insertDrawing = async (data, uid,) => {
 
         await db.runAsync(
             `INSERT INTO drawings
-            (id, userId, localUri, remoteUrl, width, height, description, status, pendingAction, syncVersion, basedOnVersion, lastError, createdAt, updatedAtClient, updatedAtServer)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            (id, userId, localUri, remoteUrl, width, height, title, description, challengeId, status, pendingAction, syncVersion, basedOnVersion, lastError, createdAt, updatedAtClient, updatedAtServer)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 data.id,
                 uid,
@@ -21,7 +21,9 @@ export const insertDrawing = async (data, uid,) => {
                 null,
                 data.width,
                 data.height,
+                data.title,
                 data.description,
+                data.challengeId,
                 "pending",
                 "create",
                 0,
@@ -97,7 +99,8 @@ export const updateDrawing = async (data, userId) => {
         //si aún no se subió (create pendiente), no lo pisamos con "update" ya que llegaría a Firebase sin imagen
         await db.runAsync(
             `UPDATE drawings
-            SET description = ?,
+            SET title = ?,
+                description = ?,
                 isArchived = ?,
                 updatedAtClient = ?,
                 status = "pending",
@@ -111,7 +114,7 @@ export const updateDrawing = async (data, userId) => {
             
                 syncVersion = syncVersion + 1
             WHERE id = ? AND userId = ?`,
-            [data.description, data.isArchived, now, data.id, userId]
+            [data.title, data.description, data.isArchived, now, data.id, userId]
         );        
 
     } catch (error) {
@@ -232,7 +235,9 @@ export const upsertRemoteDrawing = async (drawing) => {
                 remoteUrl,
                 width,
                 height,
+                title,
                 description,
+                challengeId,
                 isArchived,
                 status,
                 pendingAction,
@@ -242,7 +247,7 @@ export const upsertRemoteDrawing = async (drawing) => {
                 updatedAtClient,
                 updatedAtServer
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'synced', NULL, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'synced', NULL, ?, ?, ?, ?, ?)
         `,[
             drawing.id,
             drawing.userId,
@@ -250,7 +255,9 @@ export const upsertRemoteDrawing = async (drawing) => {
             drawing.remoteUrl,
             drawing.width,
             drawing.height,
+            drawing.title,
             drawing.description,
+            drawing.challengeId,
             drawing.isArchived ? 1 : 0,
             drawing.syncVersion ?? 0,
             drawing.syncVersion ?? 0,
@@ -264,7 +271,9 @@ export const upsertRemoteDrawing = async (drawing) => {
             UPDATE drawings
             SET
                 remoteUrl = ?,
+                title = ?,
                 description = ?,
+                challengeId = ?,
                 isArchived = ?,
                 syncVersion = ?,
                 updatedAtClient = ?,
@@ -275,7 +284,9 @@ export const upsertRemoteDrawing = async (drawing) => {
             WHERE id = ?
         `,[
             drawing.remoteUrl,
+            drawing.title,
             drawing.description,
+            drawing.challengeId,
             drawing.isArchived ? 1 : 0,
             drawing.syncVersion ?? 0,
             drawing.updatedAtClient,

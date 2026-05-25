@@ -3,7 +3,6 @@ import HomeScreen from "../screens/HomeScreen";
 import { Pressable, Text, Alert } from "react-native";
 import Header from "../components/Header/Header";
 import { Ionicons } from "@expo/vector-icons";
-import AddDrawingScreen from "../screens/AddDrawingScreen";
 import { defaultHeader } from "./defaultHeaderOptions";
 
 const Stack = createNativeStackNavigator();
@@ -33,14 +32,6 @@ const HomeStack = () => {
                 }}
             />
 
-            <Stack.Screen 
-                name = "AddDrawing" 
-                component = {AddDrawingScreen} 
-                options = {{
-                    //titulo del header
-                    headerTitle: "Guardar creacion",
-                }}
-            />
         </Stack.Navigator>
     )
 }

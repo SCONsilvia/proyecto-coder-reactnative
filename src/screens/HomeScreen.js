@@ -1,19 +1,16 @@
 import MainLayout from "../layouts/MainLayout";
 import { Text, Button } from "react-native";
 import TestInternetScreen from "./TestInternetScreen";
-import Camera from "../components/Camera/Camera";
-import Gallery from "../components/Gallery/Gallery";
 import TodayChallenge from "../components/TodayChallenge/TodayChallenge";
 
 const HomeScreen = ({navigation}) => {
+console.log("1");
 
     return(
         <MainLayout>
-            <Text>HomeScreen</Text>
+            <Text>Bienvenido</Text>
             <TodayChallenge/>
-            <Text>Hello</Text>
-            <Camera/>
-            <Gallery/>
+            <Button title = "Subir mi dibujo" onPress = {() => navigation.navigate("Upload")}/>
             <TestInternetScreen/>
         </MainLayout>
     )

@@ -14,7 +14,7 @@ const TodayChallenge = () => {
             )}
 
 
-            <Text>Reto de hoy : {challenge?.title}</Text>
+            <Text>El reto de hoy es: {challenge?.title}</Text>
         </>
     )
 }

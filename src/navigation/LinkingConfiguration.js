@@ -23,7 +23,6 @@ const linking = {
                             Home: {
                                 screens: {
                                     HomeMain: "home",
-                                    AddDrawing: "draw",
                                 },
                             },
 
@@ -39,6 +38,13 @@ const linking = {
                                     SettingsMain: "settings",
                                 },
                             },
+                        },
+                    },
+                
+                    Upload: {
+                        screens: {
+                            UploadImageScreen: "upload",
+                            UploadDetailsScreen: "upload/details",
                         },
                     },
                 },

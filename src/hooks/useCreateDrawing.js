@@ -9,25 +9,15 @@ export const useCreateDrawing = () => {
     const dispatch = useDispatch();
     const uid = useSelector(state => state.user.uid);
 
-    const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const createFromGallery = async () => {
+    const createDrawing = async (data, asset) => {
         try {
             setLoading(true);
-
-            const asset = await openGallery();
-            if (!asset) return;
-
-            const data = {
-                description: "hola a todos",
-            };
 
             const result = await createDrawingWithImage(data, asset, uid);
 
             dispatch(drawingChanged());
-
-            setImage(result.savedUri);
 
             return result;
 
@@ -39,9 +29,8 @@ export const useCreateDrawing = () => {
     };
 
     return {
-        image,
         loading,
-        createFromGallery,
+        createDrawing,
     };
 };
 

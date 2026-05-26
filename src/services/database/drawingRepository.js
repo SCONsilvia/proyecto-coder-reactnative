@@ -299,3 +299,29 @@ export const upsertRemoteDrawing = async (drawing) => {
     }
 };
 
+/*
+OBTENER DATOS PARA CALENDAR
+*/
+export const getDrawingDays = async (userId) => {
+    try {
+        const db = await dbPromise;
+
+        const rows  = await db.getAllAsync(
+            `SELECT
+                date(createdAt / 1000, 'unixepoch') as drawingDay,
+                COUNT(*) as total
+            FROM drawings
+            WHERE userId = ?
+            GROUP BY drawingDay;`,
+            [userId]
+        );
+
+        if (rows.length === 0) return null;
+
+        return rows;
+
+    } catch (error) {
+        console.error("Error obteniendo drawing Calendar", error);
+        throw error;
+    }
+};

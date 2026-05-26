@@ -8,7 +8,10 @@ import {
     Pressable,
     ActivityIndicator,
     StyleSheet,
+    KeyboardAvoidingView,
+    ScrollView
 } from "react-native";
+import { Platform } from "react-native";
 
 import { useState } from "react";
 import { useCreateDrawing } from "../hooks/useCreateDrawing";
@@ -24,12 +27,14 @@ const UploadDetailsScreen = ({ navigation, route }) => {
     const { loading: challengeLoading, challenge} = useTodayChallenge();
 
     const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
     const [isChallenge, setIsChallenge] = useState(false);
 
     const handleSave = async () => {
 
         const data = {
             title,
+            description,
             challengeId: isChallenge ? challenge?.id : null,
         };
 
@@ -82,6 +87,18 @@ const UploadDetailsScreen = ({ navigation, route }) => {
 
     return (
         <MainLayout>
+                        <KeyboardAvoidingView
+                            style={{ flex: 1 }}
+                            behavior={Platform.OS === "ios" ? "padding" : "height"}
+                            keyboardVerticalOffset={80}
+                        >
+                            <ScrollView
+                                contentContainerStyle={{   
+                                    flexGrow: 1,
+                                    padding: 20 
+                                }}
+                                keyboardShouldPersistTaps="handled"
+                            >
 
             <Image
                 source={{ uri: asset.uri }}
@@ -101,10 +118,25 @@ const UploadDetailsScreen = ({ navigation, route }) => {
                     style={styles.input}
                 />
 
+                <Text style={styles.label}>
+                    Descripcion
+                </Text>
+
+                <TextInput
+                    value={description}
+                    onChangeText={setDescription}
+                    placeholder="Agregar descripcion"
+                    style={[styles.input, styles.textarea]}
+                    multiline
+                />
+
                 <Pressable
                     style={styles.challengeRow}
-                    onPress={() =>
-                        setIsChallenge(prev => !prev)
+                    onPress={() => {
+                            setIsChallenge(prev => !prev)
+                            !title && setTitle(challenge.title);
+                            title === challenge.title & isChallenge && setTitle("");
+                        }
                     }
                 >
 
@@ -137,11 +169,13 @@ const UploadDetailsScreen = ({ navigation, route }) => {
 
                 <Button
                     title="Guardar dibujo"
-                    disabled={loading || !title.trim()}
+                    disabled={loading}
                     onPress={handleSave}
                 />
 
             </View>
+            </ScrollView>
+            </KeyboardAvoidingView>
 
         </MainLayout>
     );
@@ -175,6 +209,11 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         fontSize: 16,
         backgroundColor: "#fff",
+    },
+
+    textarea: {
+        minHeight: 120,
+        textAlignVertical: "top",
     },
 
     challengeRow: {

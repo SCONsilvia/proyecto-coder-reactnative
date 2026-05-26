@@ -10,6 +10,9 @@ const UploadImageScreen = ({navigation}) => {
     const handleSelect = (asset) => {
         setAsset(asset);
     };
+
+    console.log(asset);
+    
     
     return(
         <MainLayout>

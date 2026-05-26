@@ -2,6 +2,11 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
+const formatDate = (date) => {
+    if (!date) return "-";
+    return new Date(date).toLocaleString();
+};
+
 // Memoriza el componente y evita renders innecesarios
 //React.memo(Component) No vuelvas a renderizar este componente si sus props no cambiaron.
 const RenderItem = React.memo(({ item }) => {
@@ -21,7 +26,7 @@ const RenderItem = React.memo(({ item }) => {
                 source = {{ uri: item.localUri }}
                 style = {styles.image}
             />
-            <Text>{item.createdAt}</Text>
+            <Text>{formatDate(item.createdAt)}</Text>
         </Pressable >
     );
 });

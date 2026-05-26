@@ -52,7 +52,7 @@ const UploadDetailsScreen = ({ navigation, route }) => {
                 └── Upload
         */
        //borramos todo el historial y creamos uno nuevo que sea tabs gallery gallery detail
-        navigation.dispatch(
+       /* navigation.dispatch(
             CommonActions.reset({
                 index: 0,
                 routes: [
@@ -82,99 +82,116 @@ const UploadDetailsScreen = ({ navigation, route }) => {
                     },
                 ],
             })
+        );*/
+        //reiniciamos la navegacion para que back no te lleve a Detalles de la imagne a editar
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    {
+                        name: "Tabs",
+                    },
+                    {
+                        name: "GalleryDetail",
+                        params: {
+                            id: result.drawingId,
+                        },
+                    },
+                ],
+            })
         );
     };
 
     return (
         <MainLayout>
-                        <KeyboardAvoidingView
-                            style={{ flex: 1 }}
-                            behavior={Platform.OS === "ios" ? "padding" : "height"}
-                            keyboardVerticalOffset={80}
-                        >
-                            <ScrollView
-                                contentContainerStyle={{   
-                                    flexGrow: 1,
-                                    padding: 20 
-                                }}
-                                keyboardShouldPersistTaps="handled"
-                            >
-
-            <Image
-                source={{ uri: asset.uri }}
-                style={styles.image}
-            />
-
-            <View style={styles.form}>
-
-                <Text style={styles.label}>
-                    Título
-                </Text>
-
-                <TextInput
-                    value={title}
-                    onChangeText={setTitle}
-                    placeholder="Ponle un título a tu obra"
-                    style={styles.input}
-                />
-
-                <Text style={styles.label}>
-                    Descripcion
-                </Text>
-
-                <TextInput
-                    value={description}
-                    onChangeText={setDescription}
-                    placeholder="Agregar descripcion"
-                    style={[styles.input, styles.textarea]}
-                    multiline
-                />
-
-                <Pressable
-                    style={styles.challengeRow}
-                    onPress={() => {
-                            setIsChallenge(prev => !prev)
-                            !title && setTitle(challenge.title);
-                            title === challenge.title & isChallenge && setTitle("");
-                        }
-                    }
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={80}
+            >
+                <ScrollView
+                    contentContainerStyle={{   
+                        flexGrow: 1,
+                        padding: 20 
+                    }}
+                    keyboardShouldPersistTaps="handled"
                 >
 
-                    <View style={[
-                        styles.checkbox,
-                        isChallenge && styles.checkboxActive
-                    ]} />
+                    <Image
+                        source={{ uri: asset.uri }}
+                        style={styles.image}
+                    />
 
-                    <Text style={styles.challengeText}>
-                        Participar en el reto diario
-                    </Text>
+                    <View style={styles.form}>
 
-                </Pressable>
-
-                {challengeLoading && (
-                    <ActivityIndicator />
-                )}
-
-                {!challengeLoading && challenge && (
-                    <View style={styles.challengeCard}>
-                        <Text style={styles.challengeTitle}>
-                            Reto de hoy
+                        <Text style={styles.label}>
+                            Título
                         </Text>
 
-                        <Text style={styles.challengeName}>
-                            {challenge.title}
+                        <TextInput
+                            value={title}
+                            onChangeText={setTitle}
+                            placeholder="Ponle un título a tu obra"
+                            style={styles.input}
+                        />
+
+                        <Text style={styles.label}>
+                            Descripcion
                         </Text>
+
+                        <TextInput
+                            value={description}
+                            onChangeText={setDescription}
+                            placeholder="Agregar descripcion"
+                            style={[styles.input, styles.textarea]}
+                            multiline
+                        />
+
+                        <Pressable
+                            style={styles.challengeRow}
+                            onPress={() => {
+                                    setIsChallenge(prev => !prev)
+                                    !title && setTitle(challenge.title);
+                                    title === challenge.title & isChallenge && setTitle("");
+                                }
+                            }
+                        >
+
+                            <View style={[
+                                styles.checkbox,
+                                isChallenge && styles.checkboxActive
+                            ]} />
+
+                            <Text style={styles.challengeText}>
+                                Participar en el reto diario
+                            </Text>
+
+                        </Pressable>
+
+                        {challengeLoading && (
+                            <ActivityIndicator />
+                        )}
+
+                        {!challengeLoading && challenge && (
+                            <View style={styles.challengeCard}>
+                                <Text style={styles.challengeTitle}>
+                                    Reto de hoy
+                                </Text>
+
+                                <Text style={styles.challengeName}>
+                                    {challenge.title}
+                                </Text>
+                            </View>
+                        )}
+
+                        <Button
+                            title="Guardar dibujo"
+                            disabled={loading}
+                            onPress={handleSave}
+                        />
+
                     </View>
-                )}
-
-                <Button
-                    title="Guardar dibujo"
-                    disabled={loading}
-                    onPress={handleSave}
-                />
-
-            </View>
-            </ScrollView>
+                </ScrollView>
             </KeyboardAvoidingView>
 
         </MainLayout>

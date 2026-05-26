@@ -4,11 +4,15 @@ import { useSelector } from "react-redux";
 import { useEffect, useState, useCallback } from "react";
 import RenderItem from "../RenderItem/RenderItem";
 import { useWindowDimensions } from "react-native";
-import { useGalleryDrawings } from "../../hooks/useGalleryDrawings";
 
-const Galeria = () => {
+const Galeria = ({items, loading}) => {
+    const { width } = useWindowDimensions();
 
-    const { items, loading, numColumns } = useGalleryDrawings();
+    const ITEM_SIZE = 180;
+    const numColumns = Math.min(
+        5,
+        Math.max(2, Math.floor(width / ITEM_SIZE))
+    );
     
     //Memoriza la función renderItem
     //const renderItem = useCallback(fn, []); React, reutilizá esta función mientras sus dependencias no cambien.

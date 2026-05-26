@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native";
 import { getUserDrawings } from "../services/database/drawingService";
 
 export const useGalleryDrawings = () => {
@@ -10,14 +9,6 @@ export const useGalleryDrawings = () => {
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const { width } = useWindowDimensions();
-
-    const ITEM_SIZE = 180;
-    const numColumns = Math.min(
-        5,
-        Math.max(2, Math.floor(width / ITEM_SIZE))
-    );
 
  // Solo resetea cuando cambia el usuario (login/logout)
     useEffect(() => {
@@ -41,6 +32,5 @@ export const useGalleryDrawings = () => {
     return {
         items,
         loading,
-        numColumns,
     };
 };

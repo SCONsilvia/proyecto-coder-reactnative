@@ -325,3 +325,30 @@ export const getDrawingDays = async (userId) => {
         throw error;
     }
 };
+
+/*
+OBTENER DRAWINGS DE UNA FECHA
+*/
+export const getDrawingsByDate = async (userId, date) => {
+    try {
+        const db = await dbPromise;
+
+        //date(1748290000, 'unixepoch') Va a dar como resultado 2025-05-26, unixepoch = esto representa segundos desde 1970
+        const rows  = await db.getAllAsync(
+            `SELECT *
+            FROM drawings
+            WHERE userId = ?
+            AND date(createdAt / 1000, 'unixepoch') = ?
+            ORDER BY createdAt DESC`,
+            [userId, date]
+        );
+
+        if (rows.length === 0) return null;
+
+        return rows;
+
+    } catch (error) {
+        console.error("Error obteniendo drawing Calendar", error);
+        throw error;
+    }
+};

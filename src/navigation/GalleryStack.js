@@ -5,6 +5,7 @@ import Header from "../components/Header/Header";
 import { Ionicons } from "@expo/vector-icons";
 import ImageDetailScreen from "../screens/ImageDetailScreen";
 import { defaultHeader } from "./defaultHeaderOptions";
+import GalleryDayScreen from "../screens/GalleryDayScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,16 +31,6 @@ const GalleryStack = () => {
                             <Text>Info</Text>
                         </Pressable>
                     )
-                }}
-            />
-            <Stack.Screen 
-                name = "GalleryDetail" 
-                component = {ImageDetailScreen} 
-                options = {{
-                    //titulo del header
-                    headerTitle: "Detalle",
-                    /*presentation: "transparentModal",
-                    animation: "fade"*/
                 }}
             />
         </Stack.Navigator>

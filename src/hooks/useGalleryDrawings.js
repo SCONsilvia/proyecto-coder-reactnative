@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getUserDrawings } from "../services/database/drawingService";
+import { getArchivedDrawings } from "../services/database/drawingRepository";
 
-export const useGalleryDrawings = () => {
+export const useGalleryDrawings = (mode = "active") => {
 
     const uid = useSelector(state => state.user.uid);
     const version = useSelector(state => state.drawings.version);
@@ -10,24 +11,33 @@ export const useGalleryDrawings = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
- // Solo resetea cuando cambia el usuario (login/logout)
+    // Reset solo cuando cambia usuario
     useEffect(() => {
         setItems([]);
         setLoading(true);
     }, [uid]);
 
-    // Refresca silenciosamente en cada cambio de datos
     useEffect(() => {
         if (!uid) return;
 
         const load = async () => {
-            const resp = await getUserDrawings(uid);
+
+            setLoading(true);
+
+            let resp = [];
+
+            if (mode === "archived") {
+                resp = await getArchivedDrawings(uid);
+            } else {
+                resp = await getUserDrawings(uid);
+            }
             setItems(resp);
             setLoading(false);
         };
 
         load();
-    }, [uid, version]);
+
+    }, [uid, version, mode]);
 
     return {
         items,

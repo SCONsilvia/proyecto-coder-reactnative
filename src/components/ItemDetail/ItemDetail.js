@@ -2,16 +2,22 @@ import {
     Text,
     View,
     Image,
-    ActivityIndicator,
-    StyleSheet,
     ScrollView,
-    Button
+    Button,
+    StyleSheet,
 } from "react-native";
+
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateDrawing } from "../../services/database/drawingService";
+import { drawingChanged } from "../../features/drawings/drawingsSlice";
+
+import DrawingForm from "../DrawingForm/DrawingForm";
 
 const InfoRow = ({ label, value }) => (
     <View style={styles.row}>
         <Text style={styles.label}>{label}</Text>
-        <Text style={styles.value}>{value}</Text>
+        <Text style={styles.value}>{String(value)}</Text>
     </View>
 );
 
@@ -20,92 +26,89 @@ const formatDate = (date) => {
     return new Date(date).toLocaleString();
 };
 
-import { useSelector, useDispatch } from "react-redux";
-import { updateDrawing } from "../../services/database/drawingService";
-import { drawingChanged } from "../../features/drawings/drawingsSlice";
-
 const ItemDetail = ({ item }) => {
-    const dispatch = useDispatch()
-
     const uid = useSelector(state => state.user.uid);
+    const dispatch = useDispatch();
 
-    const archiva = async () => {
-        const data = {
-            id : item.id,
-            title: "alaaa",
-            description : "nueva",
-            isArchived : 0,
+    const [editing, setEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const [title, setTitle] = useState(item.title || "");
+    const [description, setDescription] = useState(item.description || "");
+
+    const handleSave = async () => {
+        setLoading(true);
+        try {
+            await updateDrawing({ id: item.id, title, description, isArchived: item.isArchived }, uid);
+            dispatch(drawingChanged());
+            setEditing(false);
+        } finally {
+            setLoading(false);
         }
-        const resp = await updateDrawing(data, uid);
-        dispatch(drawingChanged());
-    }
+    };
+
+    const handleArchive = async () => {
+        setLoading(true);
+        try {
+            await updateDrawing({
+                id: item.id,
+                title: item.title,
+                description: item.description,
+                isArchived: !item.isArchived,
+            }, uid);
+            dispatch(drawingChanged()); 
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
 
-            {/* Imagen */}
             <Image
                 source={{ uri: item.localUri }}
                 style={styles.image}
                 resizeMode="contain"
             />
 
-            {/* Información */}
             <View style={styles.infoContainer}>
 
-                <Text style={styles.description}>
-                    {item.title}
-                </Text>
+                {!editing && (
+                    <>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <Text style={styles.description}>{item.description}</Text>
 
-                <Text style={styles.description}>
-                    {item.description}
-                </Text>
+                        <Button
+                            title="Editar"
+                            onPress={() => setEditing(true)}
+                            disabled={loading}
+                        />
+                    </>
+                )}
+
+                {editing && (
+                    <DrawingForm
+                        title={title}
+                        setTitle={setTitle}
+                        description={description}
+                        setDescription={setDescription}
+                        loading={loading}
+                        onSubmit={handleSave}
+                        buttonTitle="Guardar cambios"
+                    />
+                )}
 
                 <InfoRow label="Estado" value={item.status} />
-
-                <InfoRow
-                    label="Estado pendiente"
-                    value={item.pendingAction}
-                />
-
-                <InfoRow
-                    label="Resolución"
-                    value={`${item.width} x ${item.height}`}
-                />
-
-                <InfoRow
-                    label="Es reto?"
-                    value={item.challengeId}
-                />
-
-                <InfoRow
-                    label="Archivado"
-                    value={item.isArchived}
-                />
-
-                <InfoRow
-                    label="Ultimo error"
-                    value={item.lastError}
-                />
-
-                <InfoRow
-                    label="Creado"
-                    value={formatDate(item.createdAt)}
-                />
-
-                <InfoRow
-                    label="Actualizado"
-                    value={formatDate(item.updatedAtClient)}
-                />
-
-                <InfoRow
-                    label="Sync Version"
-                    value={item.syncVersion}
-                />
+                <InfoRow label="Archivado" value={item.isArchived} />
+                <InfoRow label="Creado" value={formatDate(item.createdAt)} />
 
             </View>
 
-            <Button title="Archiva" onPress= {archiva}/>
+            <Button
+                title={item.isArchived ? "Desarchivar" : "Archivar"}
+                onPress={handleArchive}
+                disabled={loading}
+            />
 
         </ScrollView>
     );
@@ -135,10 +138,14 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
 
+    title: {
+        fontSize: 20,
+        fontWeight: "700",
+    },
+
     description: {
-        fontSize: 18,
-        fontWeight: "600",
-        marginBottom: 10,
+        fontSize: 16,
+        color: "#555",
     },
 
     row: {
@@ -157,4 +164,5 @@ const styles = StyleSheet.create({
     value: {
         fontWeight: "600",
     },
+
 });

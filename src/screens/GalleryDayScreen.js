@@ -8,12 +8,12 @@ import Galeria from "../components/Galeria/Galeria";
 const GalleryDayScreen = ({navigation, route}) => {
     const { date } = route.params;
 
-    const { items, loading, numColumns } = useDrawingsByDate(date);
+    const { items, loading } = useDrawingsByDate(date);
     
     return(
         <MainLayout>
             <Text>GalleryDayScreen{date}</Text>
-            <Galeria items = {items} loading = {loading} numColumns = {numColumns}/>
+            <Galeria items = {items} loading = {loading} />
         </MainLayout>
     )
 }

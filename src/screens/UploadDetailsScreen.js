@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useCreateDrawing } from "../hooks/useCreateDrawing";
 import { CommonActions } from "@react-navigation/native";
 import { useTodayChallenge } from "../hooks/useTodayChallenge";
+import DrawingForm from "../components/DrawingForm/DrawingForm";
 
 const UploadDetailsScreen = ({ navigation, route }) => {
 
@@ -122,75 +123,24 @@ const UploadDetailsScreen = ({ navigation, route }) => {
                         style={styles.image}
                     />
 
-                    <View style={styles.form}>
+                    <DrawingForm
+                        title={title}
+                        setTitle={setTitle}
+                        description={description}
+                        setDescription={setDescription}
 
-                        <Text style={styles.label}>
-                            Título
-                        </Text>
+                        showChallenge={true}
 
-                        <TextInput
-                            value={title}
-                            onChangeText={setTitle}
-                            placeholder="Ponle un título a tu obra"
-                            style={styles.input}
-                        />
+                        isChallenge={isChallenge}
+                        setIsChallenge={setIsChallenge}
 
-                        <Text style={styles.label}>
-                            Descripcion
-                        </Text>
+                        challenge={challenge}
+                        challengeLoading={challengeLoading}
 
-                        <TextInput
-                            value={description}
-                            onChangeText={setDescription}
-                            placeholder="Agregar descripcion"
-                            style={[styles.input, styles.textarea]}
-                            multiline
-                        />
+                        loading={loading}
 
-                        <Pressable
-                            style={styles.challengeRow}
-                            onPress={() => {
-                                    setIsChallenge(prev => !prev)
-                                    !title && setTitle(challenge.title);
-                                    title === challenge.title & isChallenge && setTitle("");
-                                }
-                            }
-                        >
-
-                            <View style={[
-                                styles.checkbox,
-                                isChallenge && styles.checkboxActive
-                            ]} />
-
-                            <Text style={styles.challengeText}>
-                                Participar en el reto diario
-                            </Text>
-
-                        </Pressable>
-
-                        {challengeLoading && (
-                            <ActivityIndicator />
-                        )}
-
-                        {!challengeLoading && challenge && (
-                            <View style={styles.challengeCard}>
-                                <Text style={styles.challengeTitle}>
-                                    Reto de hoy
-                                </Text>
-
-                                <Text style={styles.challengeName}>
-                                    {challenge.title}
-                                </Text>
-                            </View>
-                        )}
-
-                        <Button
-                            title="Guardar dibujo"
-                            disabled={loading}
-                            onPress={handleSave}
-                        />
-
-                    </View>
+                        onSubmit={handleSave}
+                    />
                 </ScrollView>
             </KeyboardAvoidingView>
 

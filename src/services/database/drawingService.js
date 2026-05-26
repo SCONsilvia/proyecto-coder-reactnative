@@ -55,7 +55,7 @@ export const getUserDrawings = async (userId) => {
     try {
         if (!userId) return [];
 
-        return await drawingRepository.getAllDrawings(userId);
+        return await drawingRepository.getActiveDrawings(userId);
 
     } catch (error) {
         console.error(error);

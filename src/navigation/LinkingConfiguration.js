@@ -29,7 +29,6 @@ const linking = {
                             Gallery: {
                                 screens: {
                                     GalleryMain: "gallery",
-                                    GalleryDetail: "gallery/:id",
                                 },
                             },
 
@@ -47,6 +46,9 @@ const linking = {
                             UploadDetailsScreen: "upload/details",
                         },
                     },
+                    GalleryDetail: "gallery/:id",
+
+                    GalleryDayScreen: "gallery/day/:date",
                 },
             }
         },

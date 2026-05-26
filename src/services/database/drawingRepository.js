@@ -45,7 +45,7 @@ export const insertDrawing = async (data, uid,) => {
 /*
 OBTENER TODOS LOS DRAWINGS
 */
-export const getAllDrawings = async (userId) => {
+export const getActiveDrawings = async (userId) => {
     try {
         
         const db = await dbPromise;
@@ -64,6 +64,29 @@ export const getAllDrawings = async (userId) => {
 };
 
 /*
+OBTENER TODOS LOS DRAWINGS ARCHIVADOS
+*/
+export const getArchivedDrawings = async (userId) => {
+    try {
+
+        const db = await dbPromise;
+
+        const drawings = await db.getAllAsync(
+            `SELECT * FROM drawings 
+             WHERE userId = ? 
+             AND isArchived = 1`,
+            [userId]
+        );
+
+        return drawings;
+
+    } catch (error) {
+        console.error("Error obteniendo drawings archivados", error);
+        throw error;
+    }
+};
+
+/*
 OBTENER UN DRAWING
 */
 export const getDrawingById = async (id, userId) => {
@@ -71,7 +94,7 @@ export const getDrawingById = async (id, userId) => {
         const db = await dbPromise;
 
         const rows  = await db.getAllAsync(
-            `SELECT * FROM drawings WHERE id = ? AND userId = ? AND isArchived != 1`,
+            `SELECT * FROM drawings WHERE id = ? AND userId = ? `,
             [id, userId]
         );
 
@@ -339,11 +362,10 @@ export const getDrawingsByDate = async (userId, date) => {
             FROM drawings
             WHERE userId = ?
             AND date(createdAt / 1000, 'unixepoch') = ?
+            AND isArchived != 1
             ORDER BY createdAt DESC`,
             [userId, date]
         );
-
-        if (rows.length === 0) return null;
 
         return rows;
 

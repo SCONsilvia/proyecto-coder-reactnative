@@ -21,13 +21,30 @@ const RenderItem = React.memo(({ item }) => {
     };
 
     return (
-        <Pressable onPress = {openDetail} style = {styles.card}>
+        <Pressable
+            onPress={openDetail}
+            style={[
+                styles.card,
+                item.isArchived === 1 && styles.archivedCard
+            ]}
+        >
+
             <Image
-                source = {{ uri: item.localUri }}
-                style = {styles.image}
+                source={{ uri: item.localUri }}
+                style={styles.image}
             />
+
+            {item.isArchived === 1 && (
+                <View style={styles.badge}>
+                    <Text style={styles.badgeText}>
+                        Archived
+                    </Text>
+                </View>
+            )}
+
             <Text>{formatDate(item.createdAt)}</Text>
-        </Pressable >
+
+        </Pressable>
     );
 });
 
@@ -52,6 +69,30 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         aspectRatio: 1,//imagenes cuadradas automaticamente
+    },
+    archivedCard: {
+        borderWidth: 2,
+        borderColor: "#D0D7DE",
+
+        shadowOpacity: 0.05,
+    },
+    badge: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+
+        backgroundColor: "rgba(0,0,0,0.7)",
+
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+
+        borderRadius: 999,
+    },
+
+    badgeText: {
+        color: "#fff",
+        fontSize: 12,
+        fontWeight: "600",
     },
 });
 

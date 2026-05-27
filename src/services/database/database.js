@@ -73,7 +73,7 @@ export const initDatabase  = async () => {
                 ON drawings(userId, status);
             `);
 
-            // búsquedas de galleria por creacion
+            // búsquedas de galería ordenadas por fecha de creación
             await db.execAsync(`
                 CREATE INDEX IF NOT EXISTS idx_drawings_created
                 ON drawings(userId, createdAt DESC);
@@ -81,7 +81,6 @@ export const initDatabase  = async () => {
 
         });
 
-        console.log("Tabla creada correctamente");
     } catch (error) {
         console.error("Error creando tabla", error);
     }
@@ -102,7 +101,6 @@ export const initDatabaseSync  = async () => {
 
         });
 
-        console.log("Tabla sync creada correctamente");
     } catch (error) {
         console.error("Error creando tabla", error);
     }
@@ -130,7 +128,6 @@ export const initDatabaseChallenges  = async () => {
         });
         
 
-        console.log("Tabla chagenger creada correctamente");
     } catch (error) {
         console.error("Error creando tabla", error);
     }

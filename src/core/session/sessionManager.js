@@ -39,10 +39,10 @@ export const startSessionListener = (store) => {
 
     });
 
-    //cleanup TOTAL
+    //Cancela el timeout y el listener de Firebase al desmontar
     return () => {
         clearTimeout(timeout);
-        unsubscribe();//funcion que devuelve onAuthStateChange es un cleanup para limpiar el listener que se crea
+        unsubscribe();
     };
 
 };

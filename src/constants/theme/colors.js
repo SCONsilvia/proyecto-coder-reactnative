@@ -1,3 +1,4 @@
+//Paleta clara — valores inspirados en Material Design 
 export const lightColors = {
     primary: "#4F46E5",
     primaryVariant: "#3730A3",
@@ -25,6 +26,7 @@ export const lightColors = {
     headerText: "#1C1B1F",
 };
 
+//Paleta oscura
 export const darkColors = {
     primary: "#818CF8",
     primaryVariant: "#6366F1",

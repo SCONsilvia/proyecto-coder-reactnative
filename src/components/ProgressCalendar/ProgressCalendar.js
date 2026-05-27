@@ -30,7 +30,7 @@ const ProgressCalendar = ({ refreshKey = 0 }) => {
     return (
         <Calendar
 
-            key = {isDark ? "dark" : "light"}
+            key = {isDark ? "dark" : "light"}//fuerza re-render del calendario al cambiar el tema
             markedDates = {data}
             onDayPress = {handleDayPress}
             theme = {{

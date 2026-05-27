@@ -10,17 +10,6 @@ export const insertChallenge = async (data) => {
     );
 };
 
-export const getAllChallenge = async () => {
-    const db = await dbPromise;
-
-    const rows = await db.getAllAsync(
-        `SELECT * FROM challenges`,
-        []
-    );
-
-    return rows;
-}
-
 export const getChallengeById = async (id) => {
     const db = await dbPromise;
 

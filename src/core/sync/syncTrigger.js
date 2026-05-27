@@ -1,5 +1,3 @@
-// core/sync/syncTrigger.js
-
 let triggerSync = null;
 let syncRequested = false;
 

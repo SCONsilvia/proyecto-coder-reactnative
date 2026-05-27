@@ -9,6 +9,7 @@ const drawingsSlice = createSlice({
     initialState,
     reducers: {
 
+        //Incrementar version fuerza que los hooks que dependen de ella recarguen sus datos
         drawingChanged: (state) => {
             state.version += 1;
         },

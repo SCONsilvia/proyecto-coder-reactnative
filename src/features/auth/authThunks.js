@@ -1,5 +1,4 @@
-//Un thunk es simplemente una accion de Redux que puede hacer cosas async antes de modificar el estado.
-//se usa para sacar logica async de las screens
+//Thunks de autenticación: manejan lógica async de Firebase fuera de las pantallas
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import * as authService from "../../services/auth/authService";
@@ -35,7 +34,7 @@ export const registerUser = createAsyncThunk(
                 email,
                 password
             );
-            // NO retornamos el user
+            //no retornamos el user, el listener onAuthStateChanged en sessionManager actualiza el estado
             return true;
         } catch (errorCode) {
             

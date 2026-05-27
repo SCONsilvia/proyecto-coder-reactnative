@@ -42,10 +42,10 @@ export const downloadRemoteChanges = async (uid) => {
 
         const remoteDrawing = docSnap.data();
 
-        //buscamos en sqllite el mismo archivo para ver si existe, si existe comprarmos las fechas
+        //Buscamos el registro local para comparar fechas y evitar descargas innecesarias
         const localDrawing = await getDrawingById(remoteDrawing.id, remoteDrawing.userId);
         //Si ya estaba sincronizados no hacemos nada
-        ///trnaformamos los datos (convierte a milisegundos, que es serializable):
+        //Convertimos updatedAtServer a milisegundos para comparar con el valor local
         const remoteMs = remoteDrawing.updatedAtServer?.toMillis?.() ?? 0;
         if (localDrawing && remoteMs === localDrawing.updatedAtServer) {
             continue;

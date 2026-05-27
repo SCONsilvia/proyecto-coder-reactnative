@@ -38,10 +38,10 @@ function AppContent() {
             await initDatabaseSync();
             await initDatabaseChallenges();
 
-            //Firebase Auth listener
+            //Iniciamos el listener de sesión de Firebase
             stopSession = startSessionListener(store);
         };
-        // SQLite
+        // Inicializamos las tablas de SQLite antes de levantar el listener de sesión
         initDataBaseAsync();
 
 
@@ -51,7 +51,7 @@ function AppContent() {
 
     }, []);
 
-    // ✅ Sync listener separado
+    // Sync listener: se activa cuando cambia el uid (login/logout)
     useEffect(() => {
         //si no hay usuario logueado no hacemos nada
         if (!uid) return;
@@ -77,7 +77,7 @@ function AppContent() {
 
             wasOnline = isOnline; //actualiza para la próxima vez
         });
-        //eliminamos el listener
+        //Limpiamos el trigger de sync y el listener de red al desmontar o cambiar uid
         return () => {
             clearSyncTrigger();  // limpiamos el trigger
             unsubscribe();

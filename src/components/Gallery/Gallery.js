@@ -1,4 +1,4 @@
-import { openGallery } from "../../services/media/mediaSevirce.js";
+import { openGallery } from "../../services/media/mediaService.js";
 import AppButton from "../UI/AppButton.js";
 import { Alert } from "react-native";
 

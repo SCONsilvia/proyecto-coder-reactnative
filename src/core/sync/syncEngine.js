@@ -1,12 +1,12 @@
 import { uploadPendingActions } from "./uploadPending";
 import { downloadRemoteChanges } from "./downloadRemote";
 import { syncChallengesIfNeeded } from "./syncChallengesIfNeeded";
+import NetInfo from "@react-native-community/netinfo";
 
-//para que no hay nunca 2 sync simultaneos
+//Evita que haya dos sincronizaciones corriendo al mismo tiempo
 let syncing = false;
 let pendingRun = false;
 
-import NetInfo from "@react-native-community/netinfo";
 
 //onDownloadComplete va a ser para mandar mensaje de que ocurrieron cambios
 export async function runSync(uid, onDownloadComplete) {
@@ -48,7 +48,7 @@ export async function runSync(uid, onDownloadComplete) {
         console.log("✅ SYNC END");
 
     } catch (e) {
-        console.log("❌ Sync failed", e);
+        console.error("Sync failed", e);
     } finally {
         syncing = false;
 

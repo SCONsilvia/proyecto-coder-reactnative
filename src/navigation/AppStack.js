@@ -45,7 +45,6 @@ const AppStack = () => {
                         day: "numeric",
                         month: "long",
                     });
-                    //headerTitle: `Dibujos del ${formatted}`
                     return {
                         headerTitle: formatted,
                     };
@@ -56,10 +55,7 @@ const AppStack = () => {
                 name="GalleryDetail"
                 component={ImageDetailScreen}
                 options = {{
-                    //titulo del header
                     headerTitle: "Detalle",
-                    /*presentation: "transparentModal",
-                    animation: "fade"*/
                 }}
             />
         

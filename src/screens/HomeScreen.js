@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation }) => {
     const { colors } = useTheme();
     const { challenge, loading, refresh: refreshChallenge, error: challengeError } = useTodayChallenge();
     const [refreshing, setRefreshing] = useState(false);
-    const [calendarKey, setCalendarKey] = useState(0);
+    const [calendarKey, setCalendarKey] = useState(0);//fuerza re-render del calendario al hacer pull-to-refresh
 
     const handleRefresh = useCallback(async () => {
         setRefreshing(true);

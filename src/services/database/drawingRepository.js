@@ -93,7 +93,7 @@ export const getDrawingById = async (id, userId) => {
     try {
         const db = await dbPromise;
 
-        const rows  = await db.getAllAsync(
+        const rows = await db.getAllAsync(
             `SELECT * FROM drawings WHERE id = ? AND userId = ? `,
             [id, userId]
         );
@@ -329,7 +329,7 @@ export const getDrawingDays = async (userId) => {
     try {
         const db = await dbPromise;
 
-        const rows  = await db.getAllAsync(
+        const rows = await db.getAllAsync(
             `SELECT
                 date(createdAt / 1000, 'unixepoch') as drawingDay,
                 COUNT(*) as total
@@ -356,7 +356,7 @@ export const getDrawingsByDate = async (userId, date) => {
     try {
         const db = await dbPromise;
 
-        //date(1748290000, 'unixepoch') Va a dar como resultado 2025-05-26, unixepoch = esto representa segundos desde 1970
+        //createdAt está en ms, dividimos por 1000 para convertir a segundos antes de usar unixepoch
         const rows  = await db.getAllAsync(
             `SELECT *
             FROM drawings

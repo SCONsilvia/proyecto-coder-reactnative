@@ -36,7 +36,7 @@ export const openGallery = async () => {
 
     // 2 abrir galería
     const result = await ImagePicker.launchImageLibraryAsync({
-        quality: 0.7,//compresion 0 = super comprimido 1 = maxima calidad el recomentado es 0.7 por que es menos peso menos RAM y sube mas rapido
+        quality: 0.7,//0 = máxima compresión, 1 = máxima calidad (0.7 es el balance recomendado)
         exif: false,//metadatos de la imagen si es true obtendras GPD orientacion, camara usada
     });
 

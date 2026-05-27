@@ -36,7 +36,6 @@ export const uploadPendingActions = async (userId) => {
 
                     const blob = await response.blob();
 
-                    console.log("subiendo imagen");
                     //sacamos la extension del archivo 
                     const cleanUri = drawing.localUri.split("?")[0];
                     const extension = cleanUri.substring(cleanUri.lastIndexOf(".") + 1);
@@ -48,7 +47,6 @@ export const uploadPendingActions = async (userId) => {
                         blob
                     );
 
-                    console.log("subiendo metadata");
                     // 3 subir metadata
                     const data = await createMetadata({
                         ...drawing,
@@ -58,7 +56,6 @@ export const uploadPendingActions = async (userId) => {
                     // 4 liberamos la referencia en memoria, en Android el blob no se limpia automáticamente
                     blob.close?.();
 
-                    console.log("subiendo actualizacion de sync a sqlite");
                     // 5 marcar synced local
                     await markAsSynced(drawing.id, data, remoteUrl);
                     break;
@@ -71,7 +68,7 @@ export const uploadPendingActions = async (userId) => {
                 }
 
                 default:
-                    console.log("Unknown action", drawing.pendingAction);
+                    console.warn("Acción de sync desconocida:", drawing.pendingAction);
             }
 
         } catch (e) {

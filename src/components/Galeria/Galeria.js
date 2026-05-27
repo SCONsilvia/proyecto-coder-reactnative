@@ -9,14 +9,13 @@ const Galeria = ({ items, loading, onRefresh, refreshing }) => {
 
     const { colors } = useTheme();
 
-    const ITEM_SIZE = 180;
+    const ITEM_SIZE = 180;//ancho mínimo estimado por ítem para calcular cuántas columnas entran
     const numColumns = Math.min(
         5, 
         Math.max(2, Math.floor(width / ITEM_SIZE))
     );
 
-    //Memoriza la función renderItem
-    //const renderItem = useCallback(fn, []); React, reutilizá esta función mientras sus dependencias no cambien.  
+    //useCallback evita recrear renderItem en cada render, mejorando performance en listas grandes 
     const renderItem = useCallback(
         ({ item }) => <RenderItem item={item} />,
         []

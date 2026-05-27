@@ -13,7 +13,7 @@ const RootNavigator = () => {
     const authChecked = useSelector(state => state.user.authChecked);
     const emailVerified = useSelector(state => state.user.emailVerified);
 
-    // 🧠 Firebase todavía no respondió
+    //Mientras Firebase no resolvio la sesion, mostramos la pantalla de carga
     if (!authChecked) {
         return <SplashScreen />;
     }

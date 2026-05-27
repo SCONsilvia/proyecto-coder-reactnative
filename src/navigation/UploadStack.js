@@ -16,10 +16,7 @@ const UploadStack = () => {
                 name = "UploadImageScreen" 
                 component = {UploadImageScreen} 
                 options = {{
-                    //titulo del header
                     headerTitle: "Subir dibujo",
-                    /*presentation: "transparentModal",
-                    animation: "fade"*/
                 }}
             />
 

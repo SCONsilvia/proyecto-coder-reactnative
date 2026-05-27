@@ -3,7 +3,6 @@ import { createDrawingWithImage } from "../services/database/drawingService";
 import { useDispatch, useSelector } from "react-redux";
 import { drawingChanged } from "../features/drawings/drawingsSlice";
 import { useState } from "react";
-import { openGallery } from "../services/media/mediaSevirce";
 
 export const useCreateDrawing = () => {
     const dispatch = useDispatch();

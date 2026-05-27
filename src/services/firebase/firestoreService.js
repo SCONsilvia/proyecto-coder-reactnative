@@ -3,7 +3,7 @@ import { db } from "./firebaseApp";
 
 import { resolveConflict } from "../../core/sync/conflictResolver";
 
-//funcion para limpoar datos
+//Elimina campos internos antes de subir a Firestore
 const sanitizeDrawing = (drawing) => {
     const {
         status,
@@ -41,7 +41,7 @@ export const updateMetadata = async (drawing) => {
 
     const ref = doc(db, "drawings", drawing.id);
 
-    //antes de subir el cambio vamos a ver si 1 exite el archivo y 2 dectetar que se pueda hacer el cambio
+    //Verificamos que el documento exista en Firestore antes de intentar actualizarlo
     const snap = await getDoc(ref);
 
     if (!snap.exists()) {
@@ -51,7 +51,6 @@ export const updateMetadata = async (drawing) => {
     const remote = snap.data();
 
     //CHECK VERSION
-    console.log("CHECK VERSION", drawing, remote);
     // Sin conflicto: el remoto tiene la versión que usamos como base al editar
     // Con conflicto: alguien más modificó el remoto mientras estábamos offline
     if (remote.syncVersion !== drawing.basedOnVersion) {

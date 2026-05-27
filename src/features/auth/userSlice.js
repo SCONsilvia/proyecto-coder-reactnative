@@ -22,6 +22,7 @@ const userSlice = createSlice({
         },
     },
 
+    //Maneja los estados loading/error de cada thunk async
     extraReducers: (builder) => {
         builder
 
@@ -58,14 +59,14 @@ const userSlice = createSlice({
         // LOGOUT
         .addCase(logoutUser.fulfilled, (state) => {
             state.uid = null;
-            //reiniciamos todos
+            //Limpiamos todo el estado del usuario al cerrar sesión
             state.photoURL = null;
             state.emailVerified = false;
             state.loading = false;
             state.error = null;
         })
 
-        //CHECK EMAIL
+        //VERIFICAR EMAIL
         .addCase(checkEmailVerification.pending, (state) => {
             state.loading = true;
         })
@@ -78,7 +79,7 @@ const userSlice = createSlice({
             state.error = action.payload;
         })
 
-        //Resend
+        //REENVIAR VERIFICACION
         .addCase(resendVerificationEmail.pending, (state) => {
             state.loading = true;
             state.error = null;

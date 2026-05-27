@@ -46,6 +46,7 @@ const LoginScreen = ({ navigation }) => {
         }
     };
 
+    //passwordRef permite saltar el foco del teclado de email a contraseña con "next"
     return (
         <MainLayout top = {true}>
             <KeyboardAvoidingView

@@ -1,3 +1,4 @@
+//Configuración de header compartida por todos los stacks: usa el componente Header personalizado
 import Header from "../components/Header/Header";
 
 export const defaultHeader = {

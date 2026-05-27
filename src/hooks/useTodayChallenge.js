@@ -9,7 +9,7 @@ export const useTodayChallenge = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null); 
 
-    const today = () => new Date().toISOString().split("T")[0];
+    const today = () => new Date().toISOString().split("T")[0];//devuelve "YYYY-MM-DD" en UTC
 
     const fetchWithFallback = useCallback(async () => {
         let resp = await getChallengeByDate(today());

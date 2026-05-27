@@ -1,5 +1,3 @@
-// services/drawingService.js
-
 import * as drawingRepository from "./drawingRepository";
 import { saveImage, deleteImage } from "../storage/imageStorage";
 import { requestSync } from "../../core/sync/syncTrigger";
@@ -35,9 +33,6 @@ export const createDrawingWithImage = async (data, asset, uid) => {
         return { drawingId : id, savedUri };
 
     } catch (error) {
-
-        //ROLLBACK MANUAL
-        console.log("ROLLBACK", error);
         
         if (savedUri) {
             await deleteImage(savedUri);

@@ -9,7 +9,7 @@ const TodayChallenge = ({ challenge, loading, error }) => {
     if (error) return (                                       // ← nuevo caso
         <View style = {[styles.card, { backgroundColor: colors.surfaceVariant, borderColor: colors.error }]}>
             <Text style = {[styles.label, { color: colors.error }]}>Reto de hoy</Text>
-            <Text style = {{ color: colors.error, fontSize: 14 }}>
+            <Text style = {[styles.errorText, { color: colors.error }]}>
                 No se pudo cargar el reto de hoy
             </Text>
         </View>
@@ -43,5 +43,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: "700",
+    },
+    errorText: {
+        fontSize: 14,
     },
 });

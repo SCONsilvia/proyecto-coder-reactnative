@@ -16,9 +16,6 @@ export const downloadRemoteChallenges = async () => {
     );
 
     for (const challengeDoc of snapshot.docs) {
-
-        console.log("insertando", challengeDoc.data());
-        
         await insertChallenge(
             challengeDoc.data()
         );

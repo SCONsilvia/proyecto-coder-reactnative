@@ -30,7 +30,7 @@ const Header = ({ title, onBack, rightIcon }) => {
                     {title}
                 </Text>
 
-                <View style={styles.side} accessibilityRole = "button" accessibilityLabel = "Abrir alerta">
+                <View style={styles.side}>
                     {rightIcon}
                 </View>
 

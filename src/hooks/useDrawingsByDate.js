@@ -15,7 +15,7 @@ export const useDrawingsByDate = (date) => {
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState(null);
 
-    // Solo resetea cuando cambia el usuario (login/logout)
+    //Resetea el estado cuando cambia el usuario o la fecha seleccionada
     useEffect(() => {
         setItems([]);
         setLoading(true);

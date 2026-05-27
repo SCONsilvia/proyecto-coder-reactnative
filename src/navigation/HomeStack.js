@@ -1,8 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import { Pressable, Text, Alert } from "react-native";
-import Header from "../components/Header/Header";
-import { Ionicons } from "@expo/vector-icons";
 import { defaultHeader } from "./defaultHeaderOptions";
 
 const Stack = createNativeStackNavigator();

@@ -1,4 +1,4 @@
-import { openCamera } from "../../services/media/mediaSevirce";
+import { openCamera } from "../../services/media/mediaService";
 import AppButton from "../UI/AppButton";
 import { Alert } from "react-native";
 
@@ -22,7 +22,7 @@ export default function Camera({ onSelect, style }) {
 
     return (
         <AppButton
-            title  ="Cámara"
+            title  = "Cámara"
             variant = "outline"
             onPress = {handleOpenCamera}
             style = {style}

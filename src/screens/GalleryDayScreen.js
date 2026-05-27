@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
 import { Text } from "react-native";
 import { useDrawingsByDate } from "../hooks/useDrawingsByDate";
@@ -14,8 +13,6 @@ const GalleryDayScreen = ({navigation, route}) => {
     
     return(
         <MainLayout>
-            <Text>GalleryDayScreen{date}</Text>
-
             {error && (
                 <Text style={{ color: colors.error, padding: 16 }}>
                     {error}

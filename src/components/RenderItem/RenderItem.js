@@ -8,8 +8,7 @@ const formatDate = (date) => {
     return new Date(date).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
 };
 
-// Memoriza el componente y evita renders innecesarios
-//React.memo(Component) No vuelvas a renderizar este componente si sus props no cambiaron.
+//React.memo evita re-renders si las props del item no cambiaron
 const RenderItem = React.memo(({ item }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
@@ -40,7 +39,7 @@ const RenderItem = React.memo(({ item }) => {
                 </View>
             )}
 
-            {item.syncStatus === "failed" && (
+            {item.status === "failed" && (
                 <View style={[styles.badge, styles.badgeFailed]}>
                     <Text style={styles.badgeText}>Sin sync</Text>
                 </View>

@@ -12,17 +12,6 @@ export const useDrawingCalendar = () => {
         return await getDrawingDays(uid);
     };
 
-    const getDrawingCalendar = async () => {
-        try {
-            setLoading(true);
-
-            return await fetchDrawingCalendar();
-
-        } finally {
-            setLoading(false);
-        }
-    };
-
     /*Formato deseado
         {
             "2026-05-20": {
@@ -60,7 +49,6 @@ export const useDrawingCalendar = () => {
 
     return {
         loading,
-        getDrawingCalendar,
         getDrawingCalendarFormat,
     };
 };

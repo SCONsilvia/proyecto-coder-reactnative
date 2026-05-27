@@ -1,4 +1,4 @@
-//Deep Link
+//Configuración de deep links: permite navegar a pantallas desde URLs externas (ej: miapp://home)
 const linking = {
     prefixes: ["miapp://"],
 

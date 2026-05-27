@@ -11,15 +11,9 @@ export const resolveConflict = async (localDrawing, remote) => {
 
     const remoteTime = remote.updatedAtServer?.toMillis?.() ?? remote.updatedAtClient ?? 0;
     if (localTime > remoteTime) {
-
-        console.log("LOCAL WINS");
-
         return "LOCAL_WINS";
 
     } else {
-
-        console.log("REMOTE WINS");
-
         // pisamos local y de una se marca sincronizado
         await upsertRemoteDrawing(remote);
 

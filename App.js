@@ -8,7 +8,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <Provider store = {store}>
-        <PersistGate loading = {null} persistor = {persistor}>
+        <PersistGate loading = {null} persistor = {persistor}>{/* loading = {null} porque RootNavigator muestra SplashScreen mientras authChecked es false */}
           <AppContent />
         </PersistGate>
       </Provider>

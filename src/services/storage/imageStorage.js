@@ -1,6 +1,6 @@
 import * as FileSystem from "expo-file-system/legacy";
 
-//directiorio por usuario
+//Directorio base por usuario
 const getUserDir = (userId) => {
     return FileSystem.documentDirectory + `drawings/${userId}/`;
 };
@@ -11,7 +11,7 @@ const getExtension = (uri) => {
     return cleanUri.substring(cleanUri.lastIndexOf(".") + 1);
 };
 
-//crear directorio de usuairo si no existe
+//Crea el directorio del usuario si no existe
 export const ensureUserDir = async (userId) => {
     const userDir = getUserDir(userId);
 
@@ -57,15 +57,13 @@ export const deleteImage = async (uri) => {
 
         // evitar error si no existe
         if (!file.exists) {
-            console.log("La imagen ya no existe:", uri);
+            //La imagen ya no existe
             return;
         }
 
         await FileSystem.deleteAsync(uri, {
             idempotent: true, // no falla si ya fue borrada
         });
-
-        console.log("Imagen eliminada:", uri);
 
     } catch (error) {
         console.error("Error eliminando imagen", error);

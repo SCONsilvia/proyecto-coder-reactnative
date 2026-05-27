@@ -7,6 +7,7 @@ export const useTodayChallenge = () => {
 
     const [challenge, setChallenge] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); 
 
     const today = () => new Date().toISOString().split("T")[0];
 
@@ -24,14 +25,25 @@ export const useTodayChallenge = () => {
     }, []);
 
     const load = useCallback(async () => {
-        const resp = await fetchWithFallback();
-        setChallenge(resp);
-        setLoading(false);
+        try {
+            setError(null);
+            const resp = await fetchWithFallback();
+            setChallenge(resp);
+        } catch (err) {
+            setError(err.message ?? "Error al cargar el desafío");
+        } finally {
+            setLoading(false);
+        }
     }, [fetchWithFallback]);
 
     const refresh = useCallback(async () => {
-        const resp = await fetchWithFallback();
-        setChallenge(resp);
+        try {
+            setError(null);
+            const resp = await fetchWithFallback();
+            setChallenge(resp);
+        } catch (err) {
+            setError(err.message ?? "Error al actualizar el desafío");
+        }
     }, [fetchWithFallback]);
 
     useEffect(() => {
@@ -46,6 +58,6 @@ export const useTodayChallenge = () => {
         return () => sub.remove();
     }, [load]);
 
-    return { challenge, loading, refresh  };
+    return { challenge, loading, refresh, error  };
 };
 

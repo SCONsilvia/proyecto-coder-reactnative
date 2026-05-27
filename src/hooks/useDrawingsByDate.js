@@ -13,11 +13,13 @@ export const useDrawingsByDate = (date) => {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [error, setError] = useState(null);
 
     // Solo resetea cuando cambia el usuario (login/logout)
     useEffect(() => {
         setItems([]);
         setLoading(true);
+        setError(null); 
     }, [uid, date]);
 
     // Refresca silenciosamente en cada cambio de datos
@@ -32,7 +34,7 @@ export const useDrawingsByDate = (date) => {
                 setItems(resp);
 
             } catch (err) {
-                console.log(err);
+                setError(err.message ?? "Error al cargar los dibujos"); 
 
             } finally {
                 setLoading(false);
@@ -47,20 +49,25 @@ export const useDrawingsByDate = (date) => {
         if (!uid) return;
 
         setRefreshing(true);
+        setError(null);
 
-        await runSync(uid, () => dispatch(drawingChanged()));
-
-        const resp = await getDrawingsByDate(uid, date);
-
-        setItems(resp);
-        setRefreshing(false);
+        try {
+            await runSync(uid, () => dispatch(drawingChanged()));
+            const resp = await getDrawingsByDate(uid, date);
+            setItems(resp);
+        } catch (err) {
+            setError(err.message ?? "Error al sincronizar");
+        } finally {
+            setRefreshing(false);
+        }
     }, [uid, date, dispatch]);
     
     return {
         loading,
         items,
         refresh, 
-        refreshing
+        refreshing,
+        error
     };
 };
 

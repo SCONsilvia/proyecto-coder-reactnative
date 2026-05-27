@@ -10,10 +10,12 @@ export const useCreateDrawing = () => {
     const uid = useSelector(state => state.user.uid);
 
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null); 
 
     const createDrawing = async (data, asset) => {
         try {
             setLoading(true);
+            setError(null); 
 
             const result = await createDrawingWithImage(data, asset, uid);
 
@@ -22,7 +24,7 @@ export const useCreateDrawing = () => {
             return result;
 
         } catch (err) {
-            console.log(err);
+            setError(err.message ?? "Error al crear el dibujo");
         } finally {
             setLoading(false);
         }
@@ -30,6 +32,7 @@ export const useCreateDrawing = () => {
 
     return {
         loading,
+        error,
         createDrawing,
     };
 };

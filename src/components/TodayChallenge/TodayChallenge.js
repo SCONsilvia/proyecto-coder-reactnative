@@ -1,10 +1,20 @@
 import { Text, ActivityIndicator, View, StyleSheet } from "react-native";
 import { useTheme } from "../../constants/theme";
 
-const TodayChallenge = ({ challenge, loading }) => {
+const TodayChallenge = ({ challenge, loading, error }) => {
     const { colors } = useTheme();
 
     if (loading) return <ActivityIndicator color = {colors.primary} />;
+
+    if (error) return (                                       // ← nuevo caso
+        <View style = {[styles.card, { backgroundColor: colors.surfaceVariant, borderColor: colors.error }]}>
+            <Text style = {[styles.label, { color: colors.error }]}>Reto de hoy</Text>
+            <Text style = {{ color: colors.error, fontSize: 14 }}>
+                No se pudo cargar el reto de hoy
+            </Text>
+        </View>
+    );
+
     if (!challenge) return null;
 
     return (

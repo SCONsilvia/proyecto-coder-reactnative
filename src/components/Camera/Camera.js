@@ -1,5 +1,6 @@
 import { openCamera } from "../../services/media/mediaSevirce";
 import AppButton from "../UI/AppButton";
+import { Alert } from "react-native";
 
 export default function Camera({ onSelect, style }) {
 
@@ -11,8 +12,11 @@ export default function Camera({ onSelect, style }) {
 
             onSelect(asset);
 
-        } catch(err) {
-            console.log(err);
+        } catch (err) {
+            Alert.alert(
+                "Error al abrir la cámara",
+                "No se pudo acceder a la cámara. Verificá los permisos.",
+            );
         }
     };
 

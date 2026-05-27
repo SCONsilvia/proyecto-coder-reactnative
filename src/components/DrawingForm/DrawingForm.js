@@ -20,6 +20,8 @@ const DrawingForm = ({
     loading,
     onSubmit,
     buttonTitle = "Guardar",
+
+    challengeError,
 }) => {
     const { colors } = useTheme();
 
@@ -52,9 +54,9 @@ const DrawingForm = ({
 
                             setIsChallenge(next);
 
-                            if (next && !title) setTitle(challenge.title);
+                            if (next && !title && challenge) setTitle(challenge.title);
 
-                            if (!next && title === challenge.title) setTitle("");
+                            if (!next && challenge && title === challenge.title) setTitle("");
                         }}
                     >
                         <View style = {[
@@ -78,6 +80,12 @@ const DrawingForm = ({
                                 {challenge.title}
                             </Text>
                         </View>
+                    )}
+
+                    {!challengeLoading && !challenge && challengeError && (
+                        <Text style={{ color: colors.error ?? "#e53e3e", fontSize: 13 }}>
+                            No se pudo cargar el reto de hoy
+                        </Text>
                     )}
                 </>
             )}

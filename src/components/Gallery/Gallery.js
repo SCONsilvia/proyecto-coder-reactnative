@@ -1,5 +1,6 @@
 import { openGallery } from "../../services/media/mediaSevirce.js";
 import AppButton from "../UI/AppButton.js";
+import { Alert } from "react-native";
 
 export default function Gallery({ onSelect, style }) {
 
@@ -11,8 +12,11 @@ export default function Gallery({ onSelect, style }) {
 
             onSelect(asset);
 
-        } catch(err) {
-            console.log(err);
+        } catch (err) {
+            Alert.alert(
+                "Error al abrir la galería",
+                "No se pudo acceder a la galería. Verificá los permisos.",
+            );
         }
     };
 

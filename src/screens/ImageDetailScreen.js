@@ -3,11 +3,13 @@ import ItemDetail from "../components/ItemDetail/ItemDetail";
 import { ActivityIndicator, Text, KeyboardAvoidingView } from "react-native";
 import { useDrawing } from "../hooks/useDrawing";
 import { Platform } from "react-native";
+import { useTheme } from "../constants/theme";
 
 const ImageDetailScreen = ({ route }) => {
+    const { colors } = useTheme();
 
     const { id } = route.params;
-    const { item, loading, refresh, refreshing } = useDrawing(id);
+    const { item, loading, refresh, refreshing, error } = useDrawing(id);
 
     return (
         <MainLayout>
@@ -18,7 +20,13 @@ const ImageDetailScreen = ({ route }) => {
             >
                 {loading && <ActivityIndicator />}
 
-                {!loading && !item && (
+                {!loading && error && (
+                    <Text style={{ color: colors.error, padding: 16 }}>
+                        {error}
+                    </Text>
+                )}
+
+                {!loading && !error && !item && (
                     <Text>No encontrado</Text>
                 )}
 

@@ -9,7 +9,7 @@ import { useTodayChallenge } from "../hooks/useTodayChallenge";
 
 const HomeScreen = ({ navigation }) => {
     const { colors } = useTheme();
-    const { challenge, loading, refresh: refreshChallenge } = useTodayChallenge();
+    const { challenge, loading, refresh: refreshChallenge, error: challengeError } = useTodayChallenge();
     const [refreshing, setRefreshing] = useState(false);
     const [calendarKey, setCalendarKey] = useState(0);
 
@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
                     ¡Bienvenido! 👋
                 </Text>
                 <ProgressCalendar refreshKey = {calendarKey} />
-                <TodayChallenge challenge = {challenge} loading = {loading}/>
+                <TodayChallenge challenge = {challenge} loading = {loading} error = {challengeError}/>
                 <AppButton
                     title = "Subir mi dibujo"
                     onPress = {() => navigation.navigate("Upload")}

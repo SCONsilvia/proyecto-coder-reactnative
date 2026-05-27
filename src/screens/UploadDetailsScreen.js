@@ -2,14 +2,13 @@ import MainLayout from "../layouts/MainLayout";
 import {
     Text,
     Image,
-    Button,
-    TextInput,
     View,
     Pressable,
     ActivityIndicator,
     StyleSheet,
     KeyboardAvoidingView,
-    ScrollView
+    ScrollView,
+    Alert
 } from "react-native";
 import { Platform } from "react-native";
 
@@ -23,9 +22,9 @@ const UploadDetailsScreen = ({ navigation, route }) => {
 
     const { asset } = route.params;
 
-    const { loading, createDrawing } = useCreateDrawing();
+    const { loading, createDrawing, error } = useCreateDrawing();
 
-    const { loading: challengeLoading, challenge} = useTodayChallenge();
+    const { loading: challengeLoading, challenge, error: challengeError} = useTodayChallenge();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -40,6 +39,14 @@ const UploadDetailsScreen = ({ navigation, route }) => {
         };
 
         const result = await createDrawing(data, asset);
+
+        if (!result) {
+            Alert.alert(
+                "No se pudo guardar",
+                error ?? "Ocurrió un error al guardar el dibujo. Intentá de nuevo.",
+            );
+            return;
+        }
 
         /*
             Root
@@ -139,6 +146,7 @@ const UploadDetailsScreen = ({ navigation, route }) => {
                         loading = {loading}
 
                         onSubmit = {handleSave}
+                        challengeError={challengeError}
                     />
                 </ScrollView>
             </KeyboardAvoidingView>

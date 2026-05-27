@@ -19,11 +19,13 @@ export const useDrawing = (id) => {
     const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [error, setError] = useState(null);
 
     // Solo resetea a "loading" cuando navegás a un item diferente
     useEffect(() => {
         setItem(null);
         setLoading(true);
+        setError(null);
     }, [id]);
 
     // Recarga los datos sin mostrar spinner en refreshes
@@ -31,9 +33,14 @@ export const useDrawing = (id) => {
         if (!uid) return;
 
         const load = async () => {
-            const resp = await getDrawing(id, uid);
-            setItem(resp);
-            setLoading(false);
+            try {
+                const resp = await getDrawing(id, uid);
+                setItem(resp);
+            } catch (err) {
+                setError(err.message ?? "Error al cargar el dibujo");
+            } finally {
+                setLoading(false);
+            }
         };
 
         load();
@@ -43,15 +50,19 @@ export const useDrawing = (id) => {
         if (!uid) return;
 
         setRefreshing(true);
+        setError(null);
         
-        await runSync(uid, () => dispatch(drawingChanged()));
-
-        const resp = await getDrawing(id, uid);
-
-        setItem(resp);
-        setRefreshing(false);
+        try {
+            await runSync(uid, () => dispatch(drawingChanged()));
+            const resp = await getDrawing(id, uid);
+            setItem(resp);
+        } catch (err) {
+            setError(err.message ?? "Error al sincronizar");
+        } finally {
+            setRefreshing(false);
+        }
     }, [id, uid, dispatch]);
 
-    return { item, loading, refresh, refreshing };
+    return { item, loading, refresh, refreshing, error };
 };
 

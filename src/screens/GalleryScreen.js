@@ -9,7 +9,7 @@ const GalleryScreen = () => {
 
     const [mode, setMode] = useState("active");
 
-    const { items, loading } = useGalleryDrawings(mode);
+    const { items, loading, refresh, refreshing } = useGalleryDrawings(mode);
 
     const { colors } = useTheme();
 
@@ -43,7 +43,7 @@ const GalleryScreen = () => {
                 ))}
             </View>
 
-            <Galeria items = {items} loading=  {loading} />
+            <Galeria items = {items} loading=  {loading} onRefresh = {refresh} refreshing = {refreshing}/>
 
         </MainLayout>
     );

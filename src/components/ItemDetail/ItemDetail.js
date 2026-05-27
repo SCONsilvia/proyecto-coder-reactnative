@@ -1,4 +1,4 @@
-import { Text, View, Image, ScrollView, StyleSheet } from "react-native";
+import { Text, View, Image, ScrollView, StyleSheet, RefreshControl } from "react-native";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDrawing } from "../../services/database/drawingService";
@@ -19,7 +19,7 @@ const formatDate = (date) => {
     return new Date(date).toLocaleString();
 };
 
-const ItemDetail = ({ item }) => {
+const ItemDetail = ({ item, onRefresh, refreshing }) => {
     const uid = useSelector(state => state.user.uid);
     const dispatch = useDispatch();
 
@@ -58,7 +58,16 @@ const ItemDetail = ({ item }) => {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView 
+            contentContainerStyle={styles.container}
+            refreshControl = {
+                <RefreshControl
+                    refreshing = {refreshing}
+                    onRefresh = {onRefresh}
+                    tintColor = {colors.primary}
+                />
+            }
+            >
 
             <Image
                 source = {{ uri: item.localUri }}

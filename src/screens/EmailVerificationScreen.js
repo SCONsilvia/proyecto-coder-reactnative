@@ -15,8 +15,12 @@ export default function EmailVerificationScreen() {
         try {
             await dispatch(resendVerificationEmail()).unwrap();
             Alert.alert("Correo reenviado ✅");
-        } catch {
-            Alert.alert("Error", "No se pudo reenviar el correo. Intentá más tarde.");
+        } catch (err) {
+            if (err === "auth/network-request-failed") {
+                Alert.alert("Sin conexión", "Necesitás internet para reenviar el correo.");
+            } else {
+                Alert.alert("Error", "No se pudo reenviar el correo. Intentá más tarde.");
+            }
         }
     };
 
@@ -26,7 +30,11 @@ export default function EmailVerificationScreen() {
             const verified = await dispatch(checkEmailVerification()).unwrap();
             Alert.alert(verified ? "Email verificado 🎉" : "Aún no está verificado");
         } catch (err) {
-            Alert.alert("Error", String(err));
+            if (err === "auth/network-request-failed") {
+                Alert.alert("Sin conexión", "Necesitás internet para verificar el correo.");
+            } else {
+                Alert.alert("Error", "No se pudo verificar. Intentá más tarde.");
+            }
         } finally {
             setLoading(false);
         }

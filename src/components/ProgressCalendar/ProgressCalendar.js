@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../constants/theme";
 
-const ProgressCalendar = () => {
+const ProgressCalendar = ({ refreshKey = 0 }) => {
     const navigation = useNavigation();
 
     const { loading, getDrawingCalendarFormat } = useDrawingCalendar();
@@ -19,7 +19,7 @@ const ProgressCalendar = () => {
             setData(result);
         };
         loadCalendar();
-    }, []);
+    }, [refreshKey]);
 
     const handleDayPress = (day) => {
         navigation.navigate("GalleryDayScreen", { date: day.dateString });

@@ -4,7 +4,7 @@ import { useWindowDimensions } from "react-native";
 import RenderItem from "../RenderItem/RenderItem";
 import { useTheme } from "../../constants/theme";
 
-const Galeria = ({ items, loading }) => {
+const Galeria = ({ items, loading, onRefresh, refreshing }) => {
     const { width } = useWindowDimensions();
 
     const { colors } = useTheme();
@@ -40,6 +40,8 @@ const Galeria = ({ items, loading }) => {
                 maxToRenderPerBatch = {5}
                 windowSize = {7}
                 removeClippedSubviews = {true}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
             />
         </View>
     );

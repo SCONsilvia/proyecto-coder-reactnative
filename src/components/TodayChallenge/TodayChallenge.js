@@ -1,9 +1,7 @@
 import { Text, ActivityIndicator, View, StyleSheet } from "react-native";
-import { useTodayChallenge } from "../../hooks/useTodayChallenge";
 import { useTheme } from "../../constants/theme";
 
-const TodayChallenge = () => {
-    const { loading, challenge } = useTodayChallenge();
+const TodayChallenge = ({ challenge, loading }) => {
     const { colors } = useTheme();
 
     if (loading) return <ActivityIndicator color = {colors.primary} />;

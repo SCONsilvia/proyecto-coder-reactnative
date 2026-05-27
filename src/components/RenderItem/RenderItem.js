@@ -40,6 +40,12 @@ const RenderItem = React.memo(({ item }) => {
                 </View>
             )}
 
+            {item.syncStatus === "failed" && (
+                <View style={[styles.badge, styles.badgeFailed]}>
+                    <Text style={styles.badgeText}>Sin sync</Text>
+                </View>
+            )}
+
             <Text style = {[styles.date, { color: colors.muted }]}>
                 {formatDate(item.createdAt)}
             </Text>
@@ -83,5 +89,12 @@ const styles = StyleSheet.create({
         fontSize: 11,
         textAlign: "center",
         paddingVertical: 6,
+    },
+    badgeFailed: {
+        top: undefined,
+        right: undefined,
+        bottom: 8,
+        left: 8,
+        backgroundColor: "rgba(220, 38, 38, 0.85)",
     },
 });

@@ -55,9 +55,14 @@ export const reloadUser = async () => {
 
     if (!user) throw "no-user";
 
-    await reload(user);
+    try {
 
-    return user.emailVerified;
+        await reload(user);
+        
+        return user.emailVerified;
+    } catch (error) {
+        throw error.code ?? "auth/unknown";
+    }
 };
 
 

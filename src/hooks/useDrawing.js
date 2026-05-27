@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { getDrawing } from "../services/database/drawingService";
+import { runSync } from "../core/sync/syncEngine";
+import { drawingChanged } from "../features/drawings/drawingsSlice";
 
 export const useDrawing = (id) => {
 
@@ -12,9 +14,11 @@ export const useDrawing = (id) => {
     //Si en algún momento hicieramos que cada item de la galería usara useDrawing(id) individualmente, sí tendriamos un problema: al cambiar version, todos y cada uno harían su propia query a SQLite al mismo tiempo.
     //Ese es un problema real en apps con listas grandes. La solución en ese caso sería no usar version global sino pasar el item como prop desde la lista padre, y solo recargar desde la DB al nivel de useGalleryDrawings. El detalle recibe el dato via prop, no hace su propia query.
     const version = useSelector(state => state.drawings.version); 
+    const dispatch = useDispatch();
 
     const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     // Solo resetea a "loading" cuando navegás a un item diferente
     useEffect(() => {
@@ -35,6 +39,19 @@ export const useDrawing = (id) => {
         load();
     }, [id, uid, version]);
 
-    return { item, loading };
+    const refresh = useCallback(async () => {
+        if (!uid) return;
+
+        setRefreshing(true);
+        
+        await runSync(uid, () => dispatch(drawingChanged()));
+
+        const resp = await getDrawing(id, uid);
+
+        setItem(resp);
+        setRefreshing(false);
+    }, [id, uid, dispatch]);
+
+    return { item, loading, refresh, refreshing };
 };
 

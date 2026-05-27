@@ -7,7 +7,7 @@ import { Platform } from "react-native";
 const ImageDetailScreen = ({ route }) => {
 
     const { id } = route.params;
-    const { item, loading } = useDrawing(id);
+    const { item, loading, refresh, refreshing } = useDrawing(id);
 
     return (
         <MainLayout>
@@ -22,7 +22,7 @@ const ImageDetailScreen = ({ route }) => {
                     <Text>No encontrado</Text>
                 )}
 
-                {item && <ItemDetail item={item} />}
+                {item && <ItemDetail item={item} onRefresh = {refresh} refreshing = {refreshing}/>}
             </KeyboardAvoidingView>
         </MainLayout>
     );

@@ -1,14 +1,18 @@
 
 import { getDrawingsByDate } from "../services/database/drawingRepository";
-import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect, useCallback } from "react";
+import { runSync } from "../core/sync/syncEngine";
+import { drawingChanged } from "../features/drawings/drawingsSlice";
 
 export const useDrawingsByDate = (date) => {
     const uid = useSelector(state => state.user.uid);
     const version = useSelector(state => state.drawings.version);
+    const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     // Solo resetea cuando cambia el usuario (login/logout)
     useEffect(() => {
@@ -38,10 +42,25 @@ export const useDrawingsByDate = (date) => {
         load();
 
     }, [uid, version, date]);
+
+    const refresh = useCallback(async () => {
+        if (!uid) return;
+
+        setRefreshing(true);
+
+        await runSync(uid, () => dispatch(drawingChanged()));
+
+        const resp = await getDrawingsByDate(uid, date);
+
+        setItems(resp);
+        setRefreshing(false);
+    }, [uid, date, dispatch]);
     
     return {
         loading,
         items,
+        refresh, 
+        refreshing
     };
 };
 

@@ -55,7 +55,7 @@ const RegisterScreen = ({ navigation }) => {
     };
 
     return (
-        <MainLayout>
+        <MainLayout top = {true} >
             <KeyboardAvoidingView
                 style = {{ flex: 1 }}
                 behavior = {Platform.OS === "ios" ? "padding" : "height"}
@@ -63,7 +63,6 @@ const RegisterScreen = ({ navigation }) => {
                 <ScrollView
                     contentContainerStyle = {styles.scroll}
                     keyboardShouldPersistTaps = "handled"
-                    keyboardDismissMode = "on-drag"
                 >
                     <Text style = {[styles.appName, { color: colors.primary }]}>Crear cuenta</Text>
                     <Text style = {[styles.subtitle, { color: colors.muted }]}>

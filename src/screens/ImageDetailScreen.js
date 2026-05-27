@@ -1,7 +1,8 @@
 import MainLayout from "../layouts/MainLayout";
 import ItemDetail from "../components/ItemDetail/ItemDetail";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, Text, KeyboardAvoidingView } from "react-native";
 import { useDrawing } from "../hooks/useDrawing";
+import { Platform } from "react-native";
 
 const ImageDetailScreen = ({ route }) => {
 
@@ -10,13 +11,19 @@ const ImageDetailScreen = ({ route }) => {
 
     return (
         <MainLayout>
-            {loading && <ActivityIndicator />}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined}
+                keyboardVerticalOffset = {120}
+            >
+                {loading && <ActivityIndicator />}
 
-            {!loading && !item && (
-                <Text>No encontrado</Text>
-            )}
+                {!loading && !item && (
+                    <Text>No encontrado</Text>
+                )}
 
-            {item && <ItemDetail item={item} />}
+                {item && <ItemDetail item={item} />}
+            </KeyboardAvoidingView>
         </MainLayout>
     );
 };

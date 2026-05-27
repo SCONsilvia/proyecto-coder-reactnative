@@ -9,6 +9,7 @@ import { mapFirebaseErrorToField } from "../services/auth/firebaseErrorMapper";
 import AppButton from "../components/UI/AppButton";
 import AppInput from "../components/UI/AppInput";
 import { useTheme } from "../constants/theme";
+import { useRef } from "react";
 
 const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
@@ -23,6 +24,8 @@ const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const { loading } = useSelector(state => state.user);
     const { colors } = useTheme();
+
+    const passwordRef = useRef(null);
 
     const handleLogin = async (values, { setSubmitting, setFieldError }) => {
         try {
@@ -44,10 +47,10 @@ const LoginScreen = ({ navigation }) => {
     };
 
     return (
-        <MainLayout>
+        <MainLayout top = {true}>
             <KeyboardAvoidingView
                 style = {{ flex: 1 }}
-                behavior = {Platform.OS === "ios" ? "padding" : undefined}
+                behavior = {Platform.OS === "ios" ? "padding" : "height"}
             >
                 <ScrollView
                     contentContainerStyle = {styles.scroll}
@@ -84,6 +87,9 @@ const LoginScreen = ({ navigation }) => {
                                         autoCorrect = {false}
                                         textContentType = "emailAddress"
                                         autoComplete = "email"
+                                        returnKeyType = "next"
+                                        blurOnSubmit = {false}
+                                        onSubmitEditing = {() => passwordRef.current?.focus()}
                                     />
 
                                     {touched.email && errors.email && (
@@ -93,6 +99,7 @@ const LoginScreen = ({ navigation }) => {
                                     )}
 
                                     <AppInput
+                                        ref = {passwordRef}
                                         placeholder = "Contraseña"
                                         secureTextEntry
                                         value = {values.password}
@@ -102,6 +109,9 @@ const LoginScreen = ({ navigation }) => {
                                         autoCorrect = {false}
                                         textContentType = "password"
                                         autoComplete = "password"
+                                        returnKeyType = "done"
+                                        blurOnSubmit = {false}
+                                        onSubmitEditing = {handleSubmit}
                                     />
 
                                     {touched.password && errors.password && (

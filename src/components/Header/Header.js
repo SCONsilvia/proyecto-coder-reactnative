@@ -19,6 +19,7 @@ const Header = ({ title, onBack, rightIcon }) => {
                             onPress = {onBack}
                             accessibilityRole = "button"
                             accessibilityLabel = "Volver atrás"
+                            style = {styles.backContainer}
                         >
                             <Ionicons name = "arrow-back" size = {24} color = {colors.textPrimary} />
                         </Pressable>
@@ -54,7 +55,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     side: {
-        width: 40,
+        width: 48,
         alignItems: "center",
+    },
+    backContainer: {
+        width : 48,
+        height: 48,
+        borderRadius: 24,
+        alignItems: "center",
+        justifyContent: "center"
     },
 });

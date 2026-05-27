@@ -106,40 +106,39 @@ const UploadDetailsScreen = ({ navigation, route }) => {
     return (
         <MainLayout>
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={80}
+                style = {{ flex: 1 }}
+                behavior = {Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset = {120}
             >
                 <ScrollView
-                    contentContainerStyle={{   
-                        flexGrow: 1,
+                    contentContainerStyle = {{   
                         padding: 20 
                     }}
-                    keyboardShouldPersistTaps="handled"
+                    keyboardShouldPersistTaps = "handled"
                 >
 
                     <Image
-                        source={{ uri: asset.uri }}
-                        style={styles.image}
+                        source = {{ uri: asset.uri }}
+                        style = {styles.image}
                     />
 
                     <DrawingForm
-                        title={title}
-                        setTitle={setTitle}
-                        description={description}
-                        setDescription={setDescription}
+                        title = {title}
+                        setTitle = {setTitle}
+                        description = {description}
+                        setDescription = {setDescription}
 
-                        showChallenge={true}
+                        showChallenge = {true}
 
-                        isChallenge={isChallenge}
-                        setIsChallenge={setIsChallenge}
+                        isChallenge = {isChallenge}
+                        setIsChallenge = {setIsChallenge}
 
-                        challenge={challenge}
-                        challengeLoading={challengeLoading}
+                        challenge = {challenge}
+                        challengeLoading = {challengeLoading}
 
-                        loading={loading}
+                        loading = {loading}
 
-                        onSubmit={handleSave}
+                        onSubmit = {handleSave}
                     />
                 </ScrollView>
             </KeyboardAvoidingView>

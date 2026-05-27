@@ -1,47 +1,46 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, sizes, typography } from "../../constants/theme";
+import { sizes, typography, useTheme } from "../../constants/theme";
 
 const Header = ({ title, onBack, rightIcon }) => {
-  return (
-    <SafeAreaView style = {styles.safeArea} edges={["top"]}>
-        <View style = {styles.container}>
+    const { colors } = useTheme();
 
-        {/* IZQUIERDA */}
-        <View style = {styles.side}>
-            {onBack && (
-            <Pressable onPress = {onBack}
-                accessibilityRole = "button"
-                accessibilityLabel = "Volver atrás"
-            >
-                <Ionicons name = "arrow-back" size = {24} />
-            </Pressable>
-            )}
-        </View>
+    return (
+        <SafeAreaView style = {{ backgroundColor: colors.headerBackground }} edges = {["top"]}>
+            <View style = {[styles.container, {
+                backgroundColor: colors.headerBackground,
+                borderColor: colors.headerBorder,
+            }]}>
 
-        {/* CENTRO */}
-        <Text style = {styles.title} accessibilityRole = "header">{title}</Text>
+                <View style = {styles.side}>
+                    {onBack && (
+                        <Pressable
+                            onPress = {onBack}
+                            accessibilityRole = "button"
+                            accessibilityLabel = "Volver atrás"
+                        >
+                            <Ionicons name = "arrow-back" size = {24} color = {colors.textPrimary} />
+                        </Pressable>
+                    )}
+                </View>
 
-        {/* DERECHA */}
-        <View style = {styles.side}
-            accessibilityRole = "button"
-            accessibilityLabel = "Abrir alerta"
-        >
-            {rightIcon}
-        </View>
+                <Text style = {[styles.title, { color: colors.headerText }]} accessibilityRole = "header">
+                    {title}
+                </Text>
 
-        </View>
-    </SafeAreaView>
-  );
+                <View style={styles.side} accessibilityRole = "button" accessibilityLabel = "Abrir alerta">
+                    {rightIcon}
+                </View>
+
+            </View>
+        </SafeAreaView>
+    );
 };
 
 export default Header;
 
 const styles = StyleSheet.create({
-    safeArea: {
-        backgroundColor: "#92d12d",
-    },
     container: {
         height: 60,
         flexDirection: "row",
@@ -49,18 +48,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: sizes.padding,
         borderBottomWidth: 1,
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
     },
     title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: colors.textPrimary,
         fontSize: typography.title,
+        fontWeight: "bold",
     },
     side: {
         width: 40,
         alignItems: "center",
     },
 });
-

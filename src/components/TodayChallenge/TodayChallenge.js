@@ -1,22 +1,39 @@
-import { Text, ActivityIndicator } from "react-native";
+import { Text, ActivityIndicator, View, StyleSheet } from "react-native";
 import { useTodayChallenge } from "../../hooks/useTodayChallenge";
+import { useTheme } from "../../constants/theme";
 
 const TodayChallenge = () => {
-
     const { loading, challenge } = useTodayChallenge();
-    
-    return(
-        <>
-            {loading && <ActivityIndicator />}
+    const { colors } = useTheme();
 
-            {!loading && !challenge && (
-                <Text>No encontrado</Text>
-            )}
+    if (loading) return <ActivityIndicator color = {colors.primary} />;
+    if (!challenge) return null;
 
-
-            <Text>El reto de hoy es: {challenge?.title}</Text>
-        </>
-    )
-}
+    return (
+        <View style = {[styles.card, { backgroundColor: colors.surfaceVariant, borderColor: colors.border }]}>
+            <Text style = {[styles.label, { color: colors.muted }]}>Reto de hoy</Text>
+            <Text style = {[styles.title, { color: colors.textPrimary }]}>{challenge.title}</Text>
+        </View>
+    );
+};
 
 export default TodayChallenge;
+
+const styles = StyleSheet.create({
+    card: {
+        padding: 16,
+        borderRadius: 12,
+        borderWidth: 1,
+        gap: 4,
+    },
+    label: {
+        fontSize: 12,
+        fontWeight: "600",
+        textTransform: "uppercase",
+        letterSpacing: 0.8,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "700",
+    },
+});

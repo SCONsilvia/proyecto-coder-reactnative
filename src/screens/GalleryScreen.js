@@ -1,78 +1,71 @@
-import MainLayout from "../layouts/MainLayout";
-
-import {
-    Text,
-    View,
-    Pressable,
-    StyleSheet,
-} from "react-native";
-
+import { Text, View, Pressable, StyleSheet } from "react-native";
 import { useState } from "react";
-
+import MainLayout from "../layouts/MainLayout";
 import Galeria from "../components/Galeria/Galeria";
 import { useGalleryDrawings } from "../hooks/useGalleryDrawings";
+import { useTheme } from "../constants/theme";
 
 const GalleryScreen = () => {
 
     const [mode, setMode] = useState("active");
-    
+
     const { items, loading } = useGalleryDrawings(mode);
 
-    return(
+    const { colors } = useTheme();
+
+    const tabs = [
+        { key: "active", label: "Galería" },
+        { key: "archived", label: "Archivados" },
+    ];
+
+    return (
         <MainLayout>
 
-            <View style={styles.tabs}>
-
-                <Pressable
-                    style={[
-                        styles.tab,
-                        mode === "active" && styles.activeTab
-                    ]}
-                    onPress={() => setMode("active")}
-                >
-                    <Text>Gallery</Text>
-                </Pressable>
-
-                <Pressable
-                    style={[
-                        styles.tab,
-                        mode === "archived" && styles.activeTab
-                    ]}
-                    onPress={() => setMode("archived")}
-                >
-                    <Text>Archived</Text>
-                </Pressable>
-
+            <View style = {styles.tabs}>
+                {tabs.map((tab) => (
+                    <Pressable
+                        key = {tab.key}
+                        style = {[
+                            styles.tab,
+                            { backgroundColor: colors.surfaceVariant, borderColor: colors.border },
+                                mode === tab.key && { backgroundColor: colors.primary, borderColor: colors.primary },
+                        ]}
+                        onPress = {() => setMode(tab.key)}
+                    >
+                        <Text style = {[
+                            styles.tabText,
+                            { color: colors.textSecondary },
+                            mode === tab.key && { color: "#FFFFFF" },
+                        ]}>
+                            {tab.label}
+                        </Text>
+                    </Pressable>
+                ))}
             </View>
 
-            <Galeria
-                items={items}
-                loading={loading}
-            />
+            <Galeria items = {items} loading=  {loading} />
 
         </MainLayout>
-    )
-}
+    );
+};
 
 export default GalleryScreen;
 
 const styles = StyleSheet.create({
-
     tabs: {
         flexDirection: "row",
-        padding: 10,
+        padding: 12,
         gap: 10,
     },
-
     tab: {
+        flex: 1,
         paddingVertical: 10,
-        paddingHorizontal: 16,
         borderRadius: 10,
-        backgroundColor: "#DDD",
+        alignItems: "center",
+        borderWidth: 1,
     },
-
-    activeTab: {
-        backgroundColor: "#B8D8FF",
+    tabText: {
+        fontSize: 15,
+        fontWeight: "600",
     },
-
 });

@@ -1,96 +1,67 @@
 import React, { useState } from "react";
-import {
-    View,
-    Text,
-    Button,
-    StyleSheet,
-    Alert,
-} from "react-native";
-
-import {
-    resendVerificationEmail,
-    checkEmailVerification,
-    logoutUser
-} from "../features/auth/authThunks";
-
-import { auth } from "../services/firebase/firebaseApp";
-
+import { View, Text, StyleSheet, Alert } from "react-native";
+import { resendVerificationEmail, checkEmailVerification, logoutUser } from "../features/auth/authThunks";
 import { useDispatch } from "react-redux";
+import MainLayout from "../layouts/MainLayout";
+import AppButton from "../components/UI/AppButton";
+import { useTheme } from "../constants/theme";
 
-export default function EmailVerificationScreen({ navigation }) {
-
+export default function EmailVerificationScreen() {
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const { colors } = useTheme();
 
-    // Reenviar email
     const resendEmail = async () => {
         try {
             await dispatch(resendVerificationEmail()).unwrap();
             Alert.alert("Correo reenviado ✅");
-        } catch(err) {
+        } catch {
             Alert.alert("Error", "No se pudo reenviar el correo. Intentá más tarde.");
         }
     };
 
-    //Ya verifiqué
     const checkVerification = async () => {
         setLoading(true);
-
         try {
-            const verified =
-                await dispatch(checkEmailVerification()).unwrap();
-                
-            if (verified) {
-                Alert.alert("Email verificado 🎉");
-            } else {
-                Alert.alert("Aún no está verificado");
-            }
-
-        } catch(err) {
-            Alert.alert("Error", err);
+            const verified = await dispatch(checkEmailVerification()).unwrap();
+            Alert.alert(verified ? "Email verificado 🎉" : "Aún no está verificado");
+        } catch (err) {
+            Alert.alert("Error", String(err));
         } finally {
-            // 👇 SIEMPRE se ejecuta
             setLoading(false);
         }
     };
 
-    // 🔙 Volver al login (RESET)
-    const goToLogin = async () => {
-        dispatch(logoutUser());
-    };
-
     return (
-        <View style={styles.container}>
-        <Text style={styles.title}>
-            Verifica tu correo 📩
-        </Text>
+        <MainLayout>
+            <View style = {styles.container}>
+                <Text style = {styles.icon}>📩</Text>
+                <Text style = {[styles.title, { color: colors.textPrimary }]}>
+                    Verificá tu correo
+                </Text>
+                <Text style = {[styles.text, { color: colors.textSecondary }]}>
+                    Te enviamos un enlace de verificación. Abrí tu correo y luego presioná el botón.
+                </Text>
 
-        <Text style={styles.text}>
-            Te enviamos un enlace de verificación.
-            Abre tu correo y luego presiona:
-        </Text>
-
-        <Button
-            title="Ya verifiqué"
-            onPress={checkVerification}
-            disabled={loading}
-        />
-
-        <View style={{ height: 10 }} />
-
-        <Button
-            title="Reenviar correo"
-            onPress={resendEmail}
-        />
-
-        <View style={{ height: 20 }} />
-
-        <Button
-            title="Volver al Login"
-            color="red"
-            onPress={goToLogin}
-        />
-        </View>
+                <View style = {styles.actions}>
+                    <AppButton
+                        title = "Ya verifiqué"
+                        onPress = {checkVerification}
+                        loading = {loading}
+                    />
+                    <AppButton
+                        title = "Reenviar correo"
+                        variant = "outline"
+                        onPress = {resendEmail}
+                    />
+                    <AppButton
+                        title = "Volver al Login"
+                        variant = "danger"
+                        onPress = {() => dispatch(logoutUser())}
+                    />
+                </View>
+            </View>
+        </MainLayout>
     );
 }
 
@@ -98,16 +69,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        padding: 20,
+        padding: 24,
+        gap: 12,
+    },
+    icon: {
+        fontSize: 52,
+        textAlign: "center",
     },
     title: {
-        fontSize: 24,
-        marginBottom: 20,
-        fontWeight: "bold",
+        fontSize: 26,
+        fontWeight: "700",
         textAlign: "center",
     },
     text: {
+        fontSize: 16,
         textAlign: "center",
-        marginBottom: 30,
+        lineHeight: 24,
+        marginBottom: 8,
+    },
+    actions: {
+        gap: 12,
+        marginTop: 8,
     },
 });

@@ -1,30 +1,34 @@
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 
-import RootNavigator from './src/navigation/RootNavigator';
+import RootNavigator from "./src/navigation/RootNavigator";
 
-import linking from './src/navigation/LinkingConfiguration';
+import linking from "./src/navigation/LinkingConfiguration";
 
-import { store } from './src/store/store';
+import { store } from "./src/store/store";
 
-import { startSessionListener } from './src/core/session/sessionManager';
-import { useEffect } from 'react';
+import { startSessionListener } from "./src/core/session/sessionManager";
+import { useEffect } from "react";
 
-import { initDatabase, initDatabaseSync, initDatabaseChallenges } from './src/services/database/database';
+import { initDatabase, initDatabaseSync, initDatabaseChallenges } from "./src/services/database/database";
 
-import { runSync } from './src/core/sync/syncEngine';
+import { runSync } from "./src/core/sync/syncEngine";
 
 import NetInfo from "@react-native-community/netinfo";
-import { useSelector, useDispatch } from 'react-redux';
-import { drawingChanged } from './src/features/drawings/drawingsSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { drawingChanged } from "./src/features/drawings/drawingsSlice";
 
-import { registerSyncTrigger, clearSyncTrigger } from './src/core/sync/syncTrigger';
+import { registerSyncTrigger, clearSyncTrigger } from "./src/core/sync/syncTrigger";
+
+import { StatusBar } from "expo-status-bar";
+import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 
 function AppContent() {
     
     const dispatch = useDispatch(); 
 
     const uid = useSelector(state => state.user.uid);
+    const isDark = useSelector(state => state.theme.isDark);
 
     useEffect(() => {
         let stopSession = null;
@@ -82,8 +86,9 @@ function AppContent() {
     }, [uid]);
 
     return (
-        <NavigationContainer linking={linking}>
+        <NavigationContainer theme = {isDark ? DarkTheme : DefaultTheme} linking = {linking}>
             <RootNavigator />
+            <StatusBar style = {isDark ? "light" : "dark"} />
         </NavigationContainer>
     );
 }

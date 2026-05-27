@@ -1,12 +1,12 @@
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useTheme } from "../constants/theme";
 
-export default function SplashScreen({ navigation }) {
+export default function SplashScreen() {
+    const { colors } = useTheme();
 
     return (
-        <View style={styles.container}>
-            <ActivityIndicator size="large" />
+        <View style = {[styles.container, { backgroundColor: colors.background }]}>
+            <ActivityIndicator size = "large" color = {colors.primary} />
         </View>
     );
 }

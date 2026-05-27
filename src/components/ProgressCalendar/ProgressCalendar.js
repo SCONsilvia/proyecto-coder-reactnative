@@ -1,36 +1,59 @@
+import { ActivityIndicator } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useDrawingCalendar } from "../../hooks/useDrawingCalendar";
 import { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { CommonActions } from "@react-navigation/native";
+import { useTheme } from "../../constants/theme";
 
 const ProgressCalendar = () => {
     const navigation = useNavigation();
 
-    const { loading, getDrawingCalendarFormat} = useDrawingCalendar();
+    const { loading, getDrawingCalendarFormat } = useDrawingCalendar();
     const [data, setData] = useState({});
+
+    const { colors, isDark } = useTheme();
 
     useEffect(() => {
         const loadCalendar = async () => {
             const result = await getDrawingCalendarFormat();
-            setData(result)
-        }
+            setData(result);
+        };
         loadCalendar();
-    },[])
+    }, []);
 
     const handleDayPress = (day) => {
-        navigation.navigate("GalleryDayScreen", { date: day.dateString, });
-    }
+        navigation.navigate("GalleryDayScreen", { date: day.dateString });
+    };
 
-    if(loading){
-        return <ActivityIndicator/>;
-    }
-    
-    
-    return(
-        <Calendar markedDates = {data} onDayPress={(day) => { handleDayPress(day) }}/>
-    )
-}
+    if (loading) return <ActivityIndicator color = {colors.primary} />;
+
+    return (
+        <Calendar
+
+            key = {isDark ? "dark" : "light"}
+            markedDates = {data}
+            onDayPress = {handleDayPress}
+            theme = {{
+                backgroundColor: colors.surface,
+                calendarBackground: colors.surface,
+                textSectionTitleColor: colors.muted,
+                selectedDayBackgroundColor: colors.primary,
+                selectedDayTextColor: "#FFFFFF",
+                todayTextColor: colors.primary,
+                todayBackgroundColor: colors.surfaceVariant,
+                dayTextColor: colors.textPrimary,
+                textDisabledColor: colors.border,
+                dotColor: colors.primary,
+                selectedDotColor: "#FFFFFF",
+                monthTextColor: colors.textPrimary,
+                arrowColor: colors.primary,
+                textDayFontWeight: "500",
+                textMonthFontWeight: "700",
+                textDayHeaderFontWeight: "600",
+            }}
+            style = {{ borderRadius: 12 }}
+        />
+    );
+};
 
 export default ProgressCalendar;

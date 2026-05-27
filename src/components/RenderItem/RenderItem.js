@@ -1,49 +1,48 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../../constants/theme";
 
 const formatDate = (date) => {
     if (!date) return "-";
-    return new Date(date).toLocaleString();
+    return new Date(date).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
 };
 
 // Memoriza el componente y evita renders innecesarios
 //React.memo(Component) No vuelvas a renderizar este componente si sus props no cambiaron.
 const RenderItem = React.memo(({ item }) => {
-    //console.log("render item", item);
-    
     const navigation = useNavigation();
+    const { colors } = useTheme();
 
     const openDetail = () => {
-        navigation.navigate("GalleryDetail", {
-            id: item.id
-        });
+        navigation.navigate("GalleryDetail", { id: item.id });
     };
 
     return (
         <Pressable
-            onPress={openDetail}
-            style={[
+            onPress = {openDetail}
+            style = {[
                 styles.card,
-                item.isArchived === 1 && styles.archivedCard
+                { backgroundColor: colors.surface },
+                item.isArchived === 1 && { borderWidth: 2, borderColor: colors.border },
             ]}
         >
-
-            <Image
-                source={{ uri: item.localUri }}
-                style={styles.image}
+            <Image 
+                source = {{ uri: item.localUri }} 
+                style = {styles.image} 
             />
 
             {item.isArchived === 1 && (
-                <View style={styles.badge}>
-                    <Text style={styles.badgeText}>
-                        Archived
+                <View style = {styles.badge}>
+                    <Text style = {styles.badgeText}>
+                        Archivado
                     </Text>
                 </View>
             )}
 
-            <Text>{formatDate(item.createdAt)}</Text>
-
+            <Text style = {[styles.date, { color: colors.muted }]}>
+                {formatDate(item.createdAt)}
+            </Text>
         </Pressable>
     );
 });
@@ -56,43 +55,33 @@ const styles = StyleSheet.create({
         margin: 6,
         borderRadius: 14,
         overflow: "hidden",
-
-        backgroundColor: "#fff",
-
         shadowColor: "#000",
-        shadowOpacity: 0.12,
+        shadowOpacity: 0.1,
         shadowRadius: 4,
         shadowOffset: { width: 0, height: 2 },
         elevation: 3,
     },
-
     image: {
         width: "100%",
-        aspectRatio: 1,//imagenes cuadradas automaticamente
-    },
-    archivedCard: {
-        borderWidth: 2,
-        borderColor: "#D0D7DE",
-
-        shadowOpacity: 0.05,
+        aspectRatio: 1,
     },
     badge: {
         position: "absolute",
-        top: 10,
-        right: 10,
-
-        backgroundColor: "rgba(0,0,0,0.7)",
-
+        top: 8,
+        right: 8,
+        backgroundColor: "rgba(0,0,0,0.65)",
         paddingHorizontal: 8,
-        paddingVertical: 4,
-
+        paddingVertical: 3,
         borderRadius: 999,
     },
-
     badgeText: {
         color: "#fff",
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: "600",
     },
+    date: {
+        fontSize: 11,
+        textAlign: "center",
+        paddingVertical: 6,
+    },
 });
-

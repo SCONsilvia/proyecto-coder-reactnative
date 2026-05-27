@@ -1,8 +1,7 @@
-import { Button, Image, View } from "react-native";
-import { useCreateDrawing } from "../../hooks/useCreateDrawing.js";
 import { openGallery } from "../../services/media/mediaSevirce.js";
+import AppButton from "../UI/AppButton.js";
 
-export default function Gallery({ onSelect }) {
+export default function Gallery({ onSelect, style }) {
 
     const handleOpenGallery = async () => {
         try {
@@ -18,9 +17,11 @@ export default function Gallery({ onSelect }) {
     };
 
     return (
-        <Button
+        <AppButton
             title = "Galería"
+            variant = "outline"
             onPress = {handleOpenGallery}
+            style = {style}
         />
     );
 }

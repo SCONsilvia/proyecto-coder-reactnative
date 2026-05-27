@@ -1,14 +1,14 @@
-import { View, TextInput, Button, Text, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authThunks";
 import MainLayout from "../layouts/MainLayout";
-import TestInternetScreen from "./TestInternetScreen";
-
 import { Formik } from "formik";
 import * as Yup from "yup";
-
 import { getFirebaseErrorMessage } from "../services/auth/firebaseErrors";
 import { mapFirebaseErrorToField } from "../services/auth/firebaseErrorMapper";
+import AppButton from "../components/UI/AppButton";
+import AppInput from "../components/UI/AppInput";
+import { useTheme } from "../constants/theme";
 
 const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
@@ -19,124 +19,160 @@ const loginValidationSchema = Yup.object().shape({
         .required("La contraseña es obligatoria"),
 });
 
-
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch();
-    
-    const { loading, error } = useSelector(
-        state => state.user
-    );
+    const { loading } = useSelector(state => state.user);
+    const { colors } = useTheme();
 
-    const handleLogin = async (
-                values,
-                { setSubmitting, setFieldError }
-            ) => {
-                try {
-                    if (loading) return; // doble protección
-        
-                    await dispatch(loginUser(values)).unwrap();
-        
-                } catch (errorCode) {
-        
-                    const message =
-                        getFirebaseErrorMessage(errorCode);
-        
-                    mapFirebaseErrorToField(
-                        errorCode,
-                        (field) => setFieldError(field, message)
-                    );
-                }
-                finally {
-                    setSubmitting(false);
-                }
+    const handleLogin = async (values, { setSubmitting, setFieldError }) => {
+        try {
+            if (loading) return;
+            
+            await dispatch(loginUser(values)).unwrap();
+
+        } catch (errorCode) {
+
+            const message = getFirebaseErrorMessage(errorCode);
+
+            mapFirebaseErrorToField(
+                errorCode, 
+                (field) => setFieldError(field, message)
+            );
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
         <MainLayout>
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : undefined}
+                style = {{ flex: 1 }}
+                behavior = {Platform.OS === "ios" ? "padding" : undefined}
             >
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    keyboardShouldPersistTaps="handled"
+                    contentContainerStyle = {styles.scroll}
+                    keyboardShouldPersistTaps = "handled"
                 >
-                    <Formik
-                        //Estado inicial del formulario.
-                        initialValues = {{ email: "", password: "" }}
-                        validationSchema = {loginValidationSchema}
-                        onSubmit = {handleLogin}
-                    >
-                        {({
-                            handleChange,
-                            handleSubmit,
-                            handleBlur,
-                            values,
-                            //Errores que devuelve Yup.
-                            errors,
-                            // touched Solo muestra error si el usuario tocó el input.
-                            touched,
-                        }) => (
-                            <View>
+                    <Text style = {[styles.appName, { color: colors.primary }]}>DrawApp</Text>
+                    <Text style = {[styles.subtitle, { color: colors.muted }]}>
+                        Iniciá sesión para continuar
+                    </Text>
 
-                                <TextInput
-                                    placeholder="Email"
-                                    value={values.email}
-                                    //handleChange("email") ✅ actualiza values.email ✅ marca campo como cambiado
-                                    onChangeText={handleChange("email")}
-                                    onBlur={handleBlur("email")}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    textContentType="emailAddress"
-                                    autoComplete="email"
-                                />
+                    <View style = {[styles.card, { backgroundColor: colors.surface, borderColor: colors.border}]}>
+                        <Formik
+                            initialValues = {{ email: "", password: "" }}
+                            validationSchema = {loginValidationSchema}
+                            onSubmit = {handleLogin}
+                        >
+                            {({ 
+                                handleChange, 
+                                handleSubmit, 
+                                handleBlur, 
+                                values, 
+                                errors, 
+                                touched 
+                            }) => (
+                                <View style = {styles.form}>
 
-                                {touched.email && errors.email && (
-                                <Text>{errors.email}</Text>
-                                )}
+                                    <AppInput
+                                        placeholder = "Email"
+                                        value = {values.email}
+                                        onChangeText = {handleChange("email")}
+                                        onBlur = {handleBlur("email")}
+                                        keyboardType = "email-address"
+                                        autoCapitalize = "none"
+                                        autoCorrect = {false}
+                                        textContentType = "emailAddress"
+                                        autoComplete = "email"
+                                    />
 
-                                <TextInput
-                                    placeholder="Password"
-                                    secureTextEntry
-                                    value={values.password}
-                                    onChangeText={handleChange("password")}
-                                    onBlur={handleBlur("password")}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    textContentType="password"
-                                    autoComplete="password"
-                                />
+                                    {touched.email && errors.email && (
+                                        <Text style = {[styles.error, { color: colors.error }]}>
+                                            {errors.email}
+                                        </Text>
+                                    )}
 
-                                {touched.password && errors.password && (
-                                    <Text>{errors.password}</Text>
-                                )}
+                                    <AppInput
+                                        placeholder = "Contraseña"
+                                        secureTextEntry
+                                        value = {values.password}
+                                        onChangeText = {handleChange("password")}
+                                        onBlur = {handleBlur("password")}
+                                        autoCapitalize= "none"
+                                        autoCorrect = {false}
+                                        textContentType = "password"
+                                        autoComplete = "password"
+                                    />
 
-                                {errors.general && (
-                                    <Text style={{ color: "red" }}>
-                                        {errors.general}
-                                    </Text>
-                                )}
+                                    {touched.password && errors.password && (
+                                        <Text style = {[styles.error, { color: colors.error }]}>
+                                            {errors.password}
+                                        </Text>
+                                    )}
 
-                                <Button title={loading  ? "Ingresando..." : "Login"} onPress={handleSubmit} disabled={loading }/>
-                                {/* handleSubmit
-                                    Formik:
-                                    valida con Yup
-                                    si pasa → ejecuta onSubmit*/}
+                                    {errors.general && (
+                                        <Text style = {[styles.error, { color: colors.error }]}>
+                                            {errors.general}
+                                        </Text>
+                                    )}
 
-                                <Button
-                                    title="Crear cuenta"
-                                    onPress={() => navigation.replace("Register")}
-                                />
+                                    <AppButton
+                                        title = {loading ? "Ingresando..." : "Iniciar sesión"}
+                                        onPress = {handleSubmit}
+                                        loading = {loading}
+                                    />
 
-                            </View>
-                        )}
-                    </Formik>
+                                    <AppButton
+                                        title = "Crear cuenta"
+                                        variant = "outline"
+                                        onPress = {() => navigation.replace("Register")}
+                                    />
+
+                                </View>
+                            )}
+                        </Formik>
+                    </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-            <TestInternetScreen/>
         </MainLayout>
     );
-}
+};
 
 export default LoginScreen;
+
+const styles = StyleSheet.create({
+    scroll: {
+        flexGrow: 1,
+        justifyContent: "center",
+        padding: 24,
+        gap: 8,
+    },
+    appName: {
+        fontSize: 36,
+        fontWeight: "800",
+        textAlign: "center",
+        marginBottom: 4,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: "center",
+        marginBottom: 24,
+    },
+    card: {
+        borderRadius: 16,
+        padding: 20,
+        borderWidth: 1,
+        elevation: 2,
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+    },
+    form: {
+        gap: 12,
+    },
+    error: {
+        fontSize: 13,
+        marginTop: -4,
+    },
+});

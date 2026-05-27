@@ -1,8 +1,7 @@
-import { View, Button, Image } from "react-native";
-import { useState } from "react";
 import { openCamera } from "../../services/media/mediaSevirce";
+import AppButton from "../UI/AppButton";
 
-export default function Camera({ onSelect }) {
+export default function Camera({ onSelect, style }) {
 
     const handleOpenCamera = async () => {
         try {
@@ -18,9 +17,11 @@ export default function Camera({ onSelect }) {
     };
 
     return (
-        <Button
-            title = "Abrir cámara"
+        <AppButton
+            title  ="Cámara"
+            variant = "outline"
             onPress = {handleOpenCamera}
+            style = {style}
         />
     );
 }

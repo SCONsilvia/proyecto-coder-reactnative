@@ -1,23 +1,16 @@
-import {
-    Text,
-    View,
-    Image,
-    ScrollView,
-    Button,
-    StyleSheet,
-} from "react-native";
-
+import { Text, View, Image, ScrollView, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDrawing } from "../../services/database/drawingService";
 import { drawingChanged } from "../../features/drawings/drawingsSlice";
-
 import DrawingForm from "../DrawingForm/DrawingForm";
+import AppButton from "../UI/AppButton";
+import { useTheme } from "../../constants/theme";
 
-const InfoRow = ({ label, value }) => (
-    <View style={styles.row}>
-        <Text style={styles.label}>{label}</Text>
-        <Text style={styles.value}>{String(value)}</Text>
+const InfoRow = ({ label, value, colors }) => (
+    <View style = {[styles.row, { borderColor: colors.border }]}>
+        <Text style = {[styles.rowLabel, { color: colors.muted }]}>{label}</Text>
+        <Text style = {[styles.rowValue, { color: colors.textPrimary }]}>{String(value)}</Text>
     </View>
 );
 
@@ -29,6 +22,8 @@ const formatDate = (date) => {
 const ItemDetail = ({ item }) => {
     const uid = useSelector(state => state.user.uid);
     const dispatch = useDispatch();
+
+    const { colors } = useTheme();
 
     const [editing, setEditing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -56,7 +51,7 @@ const ItemDetail = ({ item }) => {
                 description: item.description,
                 isArchived: !item.isArchived,
             }, uid);
-            dispatch(drawingChanged()); 
+            dispatch(drawingChanged());
         } finally {
             setLoading(false);
         }
@@ -66,48 +61,50 @@ const ItemDetail = ({ item }) => {
         <ScrollView contentContainerStyle={styles.container}>
 
             <Image
-                source={{ uri: item.localUri }}
-                style={styles.image}
-                resizeMode="contain"
+                source = {{ uri: item.localUri }}
+                style = {[styles.image, { backgroundColor: colors.surfaceVariant }]}
+                resizeMode = "contain"
             />
 
-            <View style={styles.infoContainer}>
+            <View style = {[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
 
-                {!editing && (
+                {!editing ? (
                     <>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.description}>{item.description}</Text>
-
-                        <Button
-                            title="Editar"
-                            onPress={() => setEditing(true)}
-                            disabled={loading}
+                        <Text style = {[styles.title, { color: colors.textPrimary }]}>{item.title}</Text>
+                        <Text style = {[styles.description, { color: colors.textSecondary }]}>
+                            {item.description}
+                        </Text>
+                        <AppButton
+                            title = "Editar"
+                            variant = "outline"
+                            onPress = {()  => setEditing(true)}
+                            disabled = {loading}
                         />
                     </>
-                )}
-
-                {editing && (
+                ) : (
                     <DrawingForm
-                        title={title}
-                        setTitle={setTitle}
-                        description={description}
-                        setDescription={setDescription}
-                        loading={loading}
-                        onSubmit={handleSave}
-                        buttonTitle="Guardar cambios"
+                        title = {title}
+                        setTitle = {setTitle}
+                        description = {description}
+                        setDescription = {setDescription}
+                        loading = {loading}
+                        onSubmit = {handleSave}
+                        buttonTitle = "Guardar cambios"
                     />
                 )}
 
-                <InfoRow label="Estado" value={item.status} />
-                <InfoRow label="Archivado" value={item.isArchived} />
-                <InfoRow label="Creado" value={formatDate(item.createdAt)} />
+                <InfoRow label = "Estado" value = {item.status} colors = {colors} />
+                <InfoRow label = "Archivado" value = {item.isArchived ? "Sí" : "No"} colors = {colors} />
+                <InfoRow label = "Creado" value = {formatDate(item.createdAt)} colors = {colors} />
 
             </View>
 
-            <Button
-                title={item.isArchived ? "Desarchivar" : "Archivar"}
-                onPress={handleArchive}
-                disabled={loading}
+            <AppButton
+                title = {item.isArchived ? "Desarchivar" : "Archivar"}
+                variant = {item.isArchived ? "outline" : "danger"}
+                onPress = {handleArchive}
+                disabled = {loading}
+                loading = {loading}
             />
 
         </ScrollView>
@@ -117,52 +114,47 @@ const ItemDetail = ({ item }) => {
 export default ItemDetail;
 
 const styles = StyleSheet.create({
-
     container: {
         padding: 16,
-        gap: 20,
+        gap: 16,
+        paddingBottom: 32,
     },
-
     image: {
         width: "100%",
-        height: 350,
-        backgroundColor: "#EAEAEA",
+        height: 320,
         borderRadius: 12,
     },
-
-    infoContainer: {
-        backgroundColor: "#FFF",
+    card: {
         borderRadius: 12,
         padding: 16,
         gap: 12,
-        elevation: 2,
+        borderWidth: 1,
+        elevation: 1,
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1 },
     },
-
     title: {
         fontSize: 20,
         fontWeight: "700",
     },
-
     description: {
         fontSize: 16,
-        color: "#555",
+        lineHeight: 22,
     },
-
     row: {
         flexDirection: "row",
         justifyContent: "space-between",
         borderBottomWidth: 1,
-        borderColor: "#EEE",
-        paddingVertical: 6,
+        paddingVertical: 8,
     },
-
-    label: {
-        color: "#666",
+    rowLabel: {
         fontWeight: "500",
+        fontSize: 14,
     },
-
-    value: {
+    rowValue: {
         fontWeight: "600",
+        fontSize: 14,
     },
-
 });

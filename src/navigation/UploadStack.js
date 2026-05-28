@@ -24,18 +24,7 @@ const UploadStack = () => {
                 name = "UploadDetailsScreen" 
                 component = {UploadDetailsScreen} 
                 options = {{
-                    //titulo del header
                     headerTitle: "Revisar dibujo",
-                    //Boton a la derecha del header
-                    headerRight : () => (
-                        <Pressable
-                            onPress={() =>
-                                Alert.alert("Información", "Pantalla UploadDetailsScreen")
-                            }
-                        >
-                            <Text>Info</Text>
-                        </Pressable>
-                    )
                 }}
             />
 

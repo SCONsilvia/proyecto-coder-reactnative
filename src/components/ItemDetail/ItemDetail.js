@@ -59,7 +59,8 @@ const ItemDetail = ({ item, onRefresh, refreshing }) => {
 
     return (
         <ScrollView 
-            contentContainerStyle={styles.container}
+            contentContainerStyle = {styles.container}
+            keyboardShouldPersistTaps = "handled"
             refreshControl = {
                 <RefreshControl
                     refreshing = {refreshing}

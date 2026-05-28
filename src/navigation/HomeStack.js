@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
-import { Pressable, Text, Alert } from "react-native";
 import { defaultHeader } from "./defaultHeaderOptions";
 
 const Stack = createNativeStackNavigator();
@@ -15,18 +14,7 @@ const HomeStack = () => {
                 name = "HomeMain" 
                 component = {HomeScreen} 
                 options = {{
-                    //titulo del header
                     headerTitle: "Inicio",
-                    //Boton a la derecha del header
-                    headerRight : () => (
-                        <Pressable
-                            onPress={() =>
-                                Alert.alert("Información", "Pantalla Home")
-                            }
-                        >
-                            <Text>Info</Text>
-                        </Pressable>
-                    )
                 }}
             />
 

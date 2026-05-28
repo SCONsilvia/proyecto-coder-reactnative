@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SettingsScreen from "../screens/SettingsScreen";
-import { Pressable, Text, Alert } from "react-native";
 import { defaultHeader } from "./defaultHeaderOptions";
 
 const Stack = createNativeStackNavigator();
@@ -16,15 +15,6 @@ const SettingsStack = () => {
                 component = {SettingsScreen} 
                 options = {{
                     headerTitle: "Configuracion",
-                    headerRight : () => (
-                        <Pressable
-                            onPress={() =>
-                                Alert.alert("Información", "Pantalla SettingsStack")
-                            }
-                        >
-                            <Text>Info</Text>
-                        </Pressable>
-                    )
                 }}
             />
         </Stack.Navigator>

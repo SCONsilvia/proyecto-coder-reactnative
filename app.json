@@ -22,7 +22,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.proyectoReactNativeCoderhouse"
+      "package": "com.silvia.drawingapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -30,6 +30,12 @@
     "plugins": [
       "expo-secure-store",
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "19be7a0c-741d-41e8-bd07-c3fb3a4d6826"
+      }
+    },
+    "owner": "scon0_0"
   }
 }
